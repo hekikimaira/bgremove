@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>背景透過ツール</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap');
 
   :root {
     --bg-primary: #0a0a0f;
@@ -35,12 +35,11 @@
     overflow-x: hidden;
   }
 
-  /* Subtle grid background */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: 
+    background:
       linear-gradient(rgba(108,92,231,0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(108,92,231,0.03) 1px, transparent 1px);
     background-size: 40px 40px;
@@ -57,7 +56,6 @@
     padding-bottom: 100px;
   }
 
-  /* Header */
   .header {
     text-align: center;
     padding: 24px 0 20px;
@@ -66,7 +64,6 @@
   .header h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
     background: linear-gradient(135deg, var(--accent-bright), var(--success));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -74,63 +71,65 @@
   }
 
   .header p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-dim);
     margin-top: 4px;
-    font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Drop Zone */
+  /* iOS対応: labelでinputをラップ */
+  .file-select-area {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .file-label {
+    display: block;
+    padding: 20px 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    text-align: center;
+  }
+
+  .file-label:active {
+    background: var(--accent-bright);
+    transform: scale(0.98);
+  }
+
+  .file-label input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .drop-zone {
     border: 2px dashed var(--border);
     border-radius: var(--radius);
-    padding: 48px 24px;
+    padding: 24px;
     text-align: center;
-    cursor: pointer;
     transition: all 0.3s ease;
     background: var(--bg-secondary);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .drop-zone::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, var(--accent-glow), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .drop-zone:hover, .drop-zone.drag-over {
-    border-color: var(--accent);
-  }
-
-  .drop-zone:hover::before, .drop-zone.drag-over::before {
-    opacity: 1;
-  }
-
-  .drop-zone-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .drop-zone-text {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
+    color: var(--text-dim);
+    font-size: 0.8rem;
     line-height: 1.6;
   }
 
-  .drop-zone-text strong {
-    color: var(--accent-bright);
+  .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.05);
   }
 
-  .drop-zone input {
-    display: none;
-  }
-
-  /* Settings */
   .settings {
     margin-top: 16px;
     background: var(--bg-secondary);
@@ -140,8 +139,7 @@
   }
 
   .settings-title {
-    font-size: 0.75rem;
-    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -152,7 +150,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
   }
 
   .setting-row label {
@@ -169,23 +166,22 @@
     font-size: 0.85rem;
     font-family: 'Noto Sans JP', sans-serif;
     outline: none;
-    cursor: pointer;
+    -webkit-appearance: none;
   }
 
-  .setting-row select:focus {
-    border-color: var(--accent);
+  .notice {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(254,202,87,0.08);
+    border: 1px solid rgba(254,202,87,0.2);
+    color: var(--warning);
+    font-size: 0.75rem;
+    line-height: 1.5;
   }
 
-  /* Processing State */
-  .processing {
-    display: none;
-    margin-top: 24px;
-    text-align: center;
-  }
-
-  .processing.active {
-    display: block;
-  }
+  .processing { display: none; margin-top: 24px; text-align: center; }
+  .processing.active { display: block; }
 
   .progress-container {
     background: var(--bg-secondary);
@@ -195,29 +191,20 @@
   }
 
   .spinner {
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     border: 3px solid var(--border);
     border-top-color: var(--accent);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 16px;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .progress-text {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-  }
+  .progress-text { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; }
 
   .progress-bar-track {
-    width: 100%;
-    height: 4px;
-    background: var(--bg-card);
-    border-radius: 2px;
-    overflow: hidden;
+    width: 100%; height: 4px;
+    background: var(--bg-card); border-radius: 2px; overflow: hidden;
   }
 
   .progress-bar-fill {
@@ -228,22 +215,10 @@
     width: 0%;
   }
 
-  .progress-detail {
-    font-size: 0.7rem;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-dim);
-    margin-top: 8px;
-  }
+  .progress-detail { font-size: 0.65rem; color: var(--text-dim); margin-top: 8px; }
 
-  /* Results */
-  .results {
-    display: none;
-    margin-top: 24px;
-  }
-
-  .results.active {
-    display: block;
-  }
+  .results { display: none; margin-top: 24px; }
+  .results.active { display: block; }
 
   .compare-container {
     background: var(--bg-secondary);
@@ -252,263 +227,113 @@
     overflow: hidden;
   }
 
-  .compare-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-  }
+  .compare-tabs { display: flex; border-bottom: 1px solid var(--border); }
 
   .compare-tab {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-secondary);
-    background: transparent;
-    border: none;
-    font-family: 'Noto Sans JP', sans-serif;
+    flex: 1; padding: 12px; text-align: center;
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    color: var(--text-secondary); background: transparent;
+    border: none; font-family: 'Noto Sans JP', sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
-
   .compare-tab.active {
     color: var(--accent-bright);
     background: var(--bg-card);
     box-shadow: inset 0 -2px 0 var(--accent);
   }
 
-  .compare-view {
-    position: relative;
-    min-height: 200px;
-  }
+  .image-display { display: none; width: 100%; }
+  .image-display.active { display: block; }
+  .image-display img { display: block; width: 100%; height: auto; }
 
-  .compare-view canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Checkerboard for transparency */
   .checker-bg {
-    background-image: 
+    background-image:
       linear-gradient(45deg, #1a1a28 25%, transparent 25%),
       linear-gradient(-45deg, #1a1a28 25%, transparent 25%),
       linear-gradient(45deg, transparent 75%, #1a1a28 75%),
       linear-gradient(-45deg, transparent 75%, #1a1a28 75%);
     background-size: 16px 16px;
-    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     background-color: #0f0f1a;
   }
 
-  .image-display {
-    display: none;
-    width: 100%;
-  }
-
-  .image-display.active {
-    display: block;
-  }
-
-  .image-display img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Actions */
   .actions {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
+    display: flex; gap: 8px; padding: 12px;
     border-top: 1px solid var(--border);
   }
 
   .btn {
-    flex: 1;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    flex: 1; padding: 12px 16px; border: none; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 500;
     font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
   }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: var(--accent-bright);
-    box-shadow: 0 4px 20px var(--accent-glow);
-  }
-
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:active { background: var(--accent-bright); }
   .btn-secondary {
-    background: var(--bg-card);
-    color: var(--text-secondary);
+    background: var(--bg-card); color: var(--text-secondary);
     border: 1px solid var(--border);
   }
-
-  .btn-secondary:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-  }
+  .btn-secondary:active { background: var(--bg-hover); }
 
   .btn-reset {
-    margin-top: 12px;
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    color: var(--text-dim);
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-    font-size: 0.8rem;
-    cursor: pointer;
+    margin-top: 12px; width: 100%; padding: 12px;
+    background: transparent; color: var(--text-dim);
+    border: 1px dashed var(--border); border-radius: 8px;
+    font-size: 0.8rem; cursor: pointer;
     font-family: 'Noto Sans JP', sans-serif;
-    transition: all 0.2s;
   }
 
-  .btn-reset:hover {
-    color: var(--danger);
-    border-color: var(--danger);
-  }
-
-  /* Status messages */
   .status {
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    display: none;
+    margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+    font-size: 0.8rem; display: none;
   }
-
-  .status.active {
-    display: block;
-  }
-
+  .status.active { display: block; }
   .status.error {
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    background: rgba(255,107,107,0.1);
+    border: 1px solid rgba(255,107,107,0.3);
     color: var(--danger);
   }
-
-  .status.info {
-    background: rgba(108, 92, 231, 0.1);
-    border: 1px solid rgba(108, 92, 231, 0.3);
-    color: var(--accent-bright);
-  }
-
   .status.success {
-    background: rgba(0, 210, 211, 0.1);
-    border: 1px solid rgba(0, 210, 211, 0.3);
+    background: rgba(0,210,211,0.1);
+    border: 1px solid rgba(0,210,211,0.3);
     color: var(--success);
   }
 
-  /* Batch list */
-  .batch-list {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  .batch-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
 
   .batch-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.8rem;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: var(--bg-secondary);
+    border: 1px solid var(--border); border-radius: 8px;
   }
-
   .batch-item-thumb {
-    width: 40px;
-    height: 40px;
-    border-radius: 6px;
-    object-fit: cover;
-    background: var(--bg-card);
+    width: 40px; height: 40px; border-radius: 6px;
+    object-fit: cover; background: var(--bg-card);
   }
-
-  .batch-item-info {
-    flex: 1;
-    overflow: hidden;
-  }
-
+  .batch-item-info { flex: 1; overflow: hidden; }
   .batch-item-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.8rem;
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; font-size: 0.8rem;
   }
-
-  .batch-item-status {
-    font-size: 0.7rem;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-dim);
-  }
-
-  .batch-item-status.done {
-    color: var(--success);
-  }
-
-  .batch-item-status.error {
-    color: var(--danger);
-  }
-
-  .batch-item-actions {
-    display: flex;
-    gap: 4px;
-  }
-
+  .batch-item-status { font-size: 0.7rem; color: var(--text-dim); }
+  .batch-item-status.done { color: var(--success); }
+  .batch-item-status.fail { color: var(--danger); }
   .batch-item-btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    background: var(--bg-card);
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
+    padding: 6px 10px; border: none; border-radius: 6px;
+    background: var(--bg-card); color: var(--text-secondary);
+    font-size: 0.75rem; cursor: pointer;
   }
 
-  .batch-item-btn:hover {
-    background: var(--accent);
-    color: white;
-  }
-
-  /* First-time loading notice */
-  .first-load-notice {
-    margin-top: 8px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: rgba(254, 202, 87, 0.08);
-    border: 1px solid rgba(254, 202, 87, 0.2);
-    color: var(--warning);
-    font-size: 0.75rem;
-    line-height: 1.5;
-  }
-
-  /* Footer credit */
   .footer {
-    text-align: center;
-    margin-top: 32px;
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    font-family: 'JetBrains Mono', monospace;
+    text-align: center; margin-top: 32px;
+    font-size: 0.65rem; color: var(--text-dim);
   }
+  .footer a { color: var(--accent-bright); text-decoration: none; }
 
-  .footer a {
-    color: var(--accent-bright);
-    text-decoration: none;
-  }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -516,42 +341,44 @@
 <div class="app">
   <div class="header">
     <h1>🔪 背景透過ツール</h1>
-    <p>browser-side AI · no server · no limits</p>
+    <p>ブラウザ完結 · サーバー不要 · 無制限</p>
   </div>
 
-  <!-- Drop Zone -->
-  <div class="drop-zone" id="dropZone">
-    <span class="drop-zone-icon">📁</span>
-    <div class="drop-zone-text">
-      <strong>タップして画像を選択</strong><br>
-      またはドラッグ＆ドロップ<br>
-      <span style="font-size:0.75rem; color:var(--text-dim)">PNG / JPG / WebP 対応 · 複数選択OK</span>
+  <div id="inputSection">
+    <div class="file-select-area">
+      <label class="file-label">
+        📁 画像を選択
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/*" multiple>
+      </label>
     </div>
-    <input type="file" id="fileInput" accept="image/*" multiple>
-  </div>
 
-  <!-- Settings -->
-  <div class="settings">
-    <div class="settings-title">⚙ 設定</div>
-    <div class="setting-row">
-      <label>モデル品質</label>
-      <select id="modelSelect">
-        <option value="isnet_fp16">標準 (fp16 ~84MB)</option>
-        <option value="isnet_quint8">軽量 (quint8 ~42MB)</option>
-        <option value="isnet">高品質 (fp32 ~168MB)</option>
-      </select>
+    <div class="drop-zone" id="dropZone">
+      ドラッグ＆ドロップでもOK（PC向け）<br>
+      PNG / JPG / WebP · 複数選択対応
+    </div>
+
+    <div class="settings">
+      <div class="settings-title">⚙ 設定</div>
+      <div class="setting-row">
+        <label>モデル品質</label>
+        <select id="modelSelect">
+          <option value="isnet_fp16">標準 (fp16)</option>
+          <option value="isnet_quint8">軽量 (quint8)</option>
+          <option value="isnet">高品質 (fp32)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="notice">
+      ⚡ 初回はモデルDLに時間がかかります（2回目以降はキャッシュ済み）<br>
+      ※ GitHub Pages等のHTTPS環境で動作します
     </div>
   </div>
 
-  <div class="first-load-notice" id="firstLoadNotice">
-    ⚡ 初回はモデルのダウンロードに時間がかかります（2回目以降はキャッシュ済み）
-  </div>
-
-  <!-- Processing -->
   <div class="processing" id="processing">
     <div class="progress-container">
       <div class="spinner"></div>
-      <div class="progress-text" id="progressText">処理中...</div>
+      <div class="progress-text" id="progressText">読み込み中...</div>
       <div class="progress-bar-track">
         <div class="progress-bar-fill" id="progressBar"></div>
       </div>
@@ -559,17 +386,15 @@
     </div>
   </div>
 
-  <!-- Status -->
   <div class="status" id="status"></div>
 
-  <!-- Single Result -->
   <div class="results" id="results">
     <div class="compare-container">
       <div class="compare-tabs">
-        <button class="compare-tab active" data-tab="result" onclick="switchTab('result')">透過結果</button>
-        <button class="compare-tab" data-tab="original" onclick="switchTab('original')">元画像</button>
+        <button class="compare-tab active" id="tabResult">透過結果</button>
+        <button class="compare-tab" id="tabOriginal">元画像</button>
       </div>
-      <div class="compare-view">
+      <div>
         <div class="image-display checker-bg active" id="resultView">
           <img id="resultImg" alt="結果">
         </div>
@@ -578,69 +403,152 @@
         </div>
       </div>
       <div class="actions">
-        <button class="btn btn-primary" onclick="downloadResult()">💾 保存</button>
-        <button class="btn btn-secondary" onclick="copyToClipboard()">📋 コピー</button>
+        <button class="btn btn-primary" id="btnDownload">💾 保存</button>
+        <button class="btn btn-secondary" id="btnCopy">📋 コピー</button>
       </div>
     </div>
-    <button class="btn-reset" onclick="resetAll()">🔄 新しい画像を処理</button>
+    <button class="btn-reset" id="btnReset">🔄 新しい画像を処理</button>
   </div>
 
-  <!-- Batch Results -->
   <div class="batch-list" id="batchList"></div>
 
   <div class="footer">
-    powered by <a href="https://github.com/nickstenning/background-removal-js" target="_blank">@imgly/background-removal</a> · runs 100% in your browser
+    powered by <a href="https://github.com/imgly/background-removal-js" target="_blank">@imgly/background-removal</a>
   </div>
 </div>
 
-<!-- Load the library from CDN -->
 <script type="module">
-import imglyRemoveBackground from 'https://esm.sh/@imgly/background-removal@1.5.13';
+let removeBackground = null;
+let libReady = false;
 
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-const processing = document.getElementById('processing');
-const progressText = document.getElementById('progressText');
-const progressBar = document.getElementById('progressBar');
-const progressDetail = document.getElementById('progressDetail');
-const results = document.getElementById('results');
-const resultImg = document.getElementById('resultImg');
-const originalImg = document.getElementById('originalImg');
-const status = document.getElementById('status');
-const batchList = document.getElementById('batchList');
-const firstLoadNotice = document.getElementById('firstLoadNotice');
-const modelSelect = document.getElementById('modelSelect');
+async function ensureLib() {
+  if (libReady) return true;
+  // Try multiple CDN sources
+  const sources = [
+    'https://esm.sh/@imgly/background-removal@1.5.13',
+    'https://esm.run/@imgly/background-removal@1.5.13',
+    'https://cdn.skypack.dev/@imgly/background-removal@1.5.13'
+  ];
+  for (const src of sources) {
+    try {
+      const mod = await import(src);
+      removeBackground = mod.default || mod.removeBackground;
+      if (typeof removeBackground === 'function') {
+        libReady = true;
+        console.log('Library loaded from:', src);
+        return true;
+      }
+    } catch(e) {
+      console.warn('Failed:', src, e.message);
+    }
+  }
+  return false;
+}
+
+const $ = id => document.getElementById(id);
+const inputSection = $('inputSection');
+const fileInput = $('fileInput');
+const dropZone = $('dropZone');
+const processing = $('processing');
+const progressText = $('progressText');
+const progressBar = $('progressBar');
+const progressDetail = $('progressDetail');
+const results = $('results');
+const resultImg = $('resultImg');
+const originalImg = $('originalImg');
+const statusEl = $('status');
+const batchList = $('batchList');
+const modelSelect = $('modelSelect');
 
 let currentBlob = null;
-let currentFileName = 'background-removed.png';
-let batchResults = [];
+let currentFileName = 'output.png';
 
-// Drop zone events
-dropZone.addEventListener('click', () => fileInput.click());
+// === Events ===
 
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
+fileInput.addEventListener('change', function() {
+  const files = Array.from(this.files).filter(f => f.type.startsWith('image/'));
+  if (files.length > 0) handleFiles(files);
+  this.value = '';
 });
 
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('drag-over');
-});
-
-dropZone.addEventListener('drop', (e) => {
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
   e.preventDefault();
   dropZone.classList.remove('drag-over');
   const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-  if (files.length) processFiles(files);
+  if (files.length > 0) handleFiles(files);
 });
 
-fileInput.addEventListener('change', (e) => {
-  const files = Array.from(e.target.files);
-  if (files.length) processFiles(files);
-  fileInput.value = '';
+$('tabResult').addEventListener('click', () => {
+  $('tabResult').classList.add('active');
+  $('tabOriginal').classList.remove('active');
+  $('resultView').classList.add('active');
+  $('originalView').classList.remove('active');
 });
 
-async function processFiles(files) {
+$('tabOriginal').addEventListener('click', () => {
+  $('tabOriginal').classList.add('active');
+  $('tabResult').classList.remove('active');
+  $('originalView').classList.add('active');
+  $('resultView').classList.remove('active');
+});
+
+$('btnDownload').addEventListener('click', () => {
+  if (!currentBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(currentBlob);
+  a.download = currentFileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+$('btnCopy').addEventListener('click', async () => {
+  if (!currentBlob) return;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': currentBlob })]);
+    showStatus('success', '📋 コピーしました');
+  } catch { showStatus('error', '❌ コピー失敗（ブラウザ制限）'); }
+});
+
+$('btnReset').addEventListener('click', resetAll);
+
+function resetAll() {
+  results.classList.remove('active');
+  processing.classList.remove('active');
+  inputSection.classList.remove('hidden');
+  batchList.innerHTML = '';
+  statusEl.classList.remove('active');
+  currentBlob = null;
+}
+
+function showStatus(type, msg) {
+  if (!msg) { statusEl.classList.remove('active'); return; }
+  statusEl.className = 'status active ' + type;
+  statusEl.textContent = msg;
+  if (type === 'success') setTimeout(() => statusEl.classList.remove('active'), 5000);
+}
+
+// === Processing ===
+
+async function handleFiles(files) {
+  inputSection.classList.add('hidden');
+  processing.classList.add('active');
+
+  if (!libReady) {
+    progressText.textContent = 'ライブラリを読み込み中...';
+    progressBar.style.width = '5%';
+    progressDetail.textContent = 'CDNからダウンロード中';
+    const ok = await ensureLib();
+    if (!ok) {
+      processing.classList.remove('active');
+      inputSection.classList.remove('hidden');
+      showStatus('error', '❌ ライブラリ読み込み失敗。HTTPS環境で開いてください。');
+      return;
+    }
+  }
+
   if (files.length === 1) {
     await processSingle(files[0]);
   } else {
@@ -652,55 +560,40 @@ async function processSingle(file) {
   showStatus('', '');
   results.classList.remove('active');
   batchList.innerHTML = '';
-  processing.classList.add('active');
-  firstLoadNotice.style.display = 'none';
-  dropZone.style.display = 'none';
-
-  const model = modelSelect.value;
 
   try {
-    // Show original
-    const originalURL = URL.createObjectURL(file);
-    originalImg.src = originalURL;
-
-    progressText.textContent = 'モデルを読み込み中...';
+    originalImg.src = URL.createObjectURL(file);
+    progressText.textContent = '背景を解析中...';
     progressBar.style.width = '10%';
-    progressDetail.textContent = `model: ${model}`;
+    progressDetail.textContent = modelSelect.value;
 
-    const config = {
-      model: model,
-      progress: (key, current, total) => {
-        if (total > 0) {
-          const pct = Math.round((current / total) * 100);
-          progressBar.style.width = `${Math.min(pct, 95)}%`;
-          if (key.includes('onnx')) {
-            progressText.textContent = 'モデルをダウンロード中...';
-            progressDetail.textContent = `${(current / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`;
-          } else {
-            progressText.textContent = '処理中...';
-            progressDetail.textContent = `${pct}%`;
-          }
+    const blob = await removeBackground(file, {
+      model: modelSelect.value,
+      progress: (key, cur, tot) => {
+        if (!tot) return;
+        const pct = Math.round((cur / tot) * 100);
+        progressBar.style.width = Math.min(pct, 95) + '%';
+        if (key && (key.includes('onnx') || key.includes('model'))) {
+          progressText.textContent = 'モデルをダウンロード中...';
+          progressDetail.textContent = (cur/1048576).toFixed(1) + 'MB / ' + (tot/1048576).toFixed(1) + 'MB';
+        } else {
+          progressText.textContent = '背景を解析中...';
+          progressDetail.textContent = pct + '%';
         }
       }
-    };
-
-    const blob = await imglyRemoveBackground(file, config);
+    });
 
     currentBlob = blob;
     currentFileName = file.name.replace(/\.[^.]+$/, '') + '_transparent.png';
-
-    const resultURL = URL.createObjectURL(blob);
-    resultImg.src = resultURL;
-
+    resultImg.src = URL.createObjectURL(blob);
     progressBar.style.width = '100%';
     processing.classList.remove('active');
     results.classList.add('active');
-    showStatus('success', '✅ 背景透過が完了しました');
-
+    showStatus('success', '✅ 完了');
   } catch (err) {
     processing.classList.remove('active');
-    dropZone.style.display = '';
-    showStatus('error', `❌ エラー: ${err.message}`);
+    inputSection.classList.remove('hidden');
+    showStatus('error', '❌ ' + err.message);
     console.error(err);
   }
 }
@@ -709,179 +602,74 @@ async function processBatch(files) {
   showStatus('', '');
   results.classList.remove('active');
   batchList.innerHTML = '';
-  processing.classList.add('active');
-  firstLoadNotice.style.display = 'none';
-  dropZone.style.display = 'none';
-  batchResults = [];
-
-  const model = modelSelect.value;
+  let done = 0;
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    progressText.textContent = `処理中 (${i + 1}/${files.length})`;
-    progressBar.style.width = `${((i) / files.length) * 100}%`;
+    progressText.textContent = '処理中 (' + (i+1) + '/' + files.length + ')';
+    progressBar.style.width = (i / files.length * 100) + '%';
     progressDetail.textContent = file.name;
 
-    // Add batch item to UI
-    const item = createBatchItem(file, i);
-    batchList.appendChild(item.element);
+    const el = document.createElement('div');
+    el.className = 'batch-item';
+    const thumb = document.createElement('img');
+    thumb.className = 'batch-item-thumb';
+    thumb.src = URL.createObjectURL(file);
+    const info = document.createElement('div');
+    info.className = 'batch-item-info';
+    const nm = document.createElement('div');
+    nm.className = 'batch-item-name';
+    nm.textContent = file.name;
+    const st = document.createElement('div');
+    st.className = 'batch-item-status';
+    st.textContent = '処理中...';
+    info.appendChild(nm);
+    info.appendChild(st);
+    const acts = document.createElement('div');
+    el.appendChild(thumb);
+    el.appendChild(info);
+    el.appendChild(acts);
+    batchList.appendChild(el);
 
     try {
-      const config = {
-        model: model,
-        progress: (key, current, total) => {
-          if (total > 0) {
-            const filePct = (current / total);
-            const overallPct = ((i + filePct) / files.length) * 100;
-            progressBar.style.width = `${Math.min(overallPct, 98)}%`;
-          }
+      const blob = await removeBackground(file, {
+        model: modelSelect.value,
+        progress: (key, cur, tot) => {
+          if (tot > 0) progressBar.style.width = (((i + cur/tot) / files.length) * 100) + '%';
         }
-      };
-
-      const blob = await imglyRemoveBackground(file, config);
-      const url = URL.createObjectURL(blob);
+      });
       const outName = file.name.replace(/\.[^.]+$/, '') + '_transparent.png';
-
-      batchResults.push({ blob, url, name: outName });
-      item.setDone(url, blob, outName);
-
+      st.textContent = '完了';
+      st.className = 'batch-item-status done';
+      const btn = document.createElement('button');
+      btn.className = 'batch-item-btn';
+      btn.textContent = '💾';
+      btn.addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = outName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+      acts.appendChild(btn);
+      done++;
     } catch (err) {
-      item.setError(err.message);
+      st.textContent = 'エラー';
+      st.className = 'batch-item-status fail';
       console.error(err);
     }
   }
 
   progressBar.style.width = '100%';
   processing.classList.remove('active');
-  showStatus('success', `✅ ${batchResults.length}/${files.length} 枚の処理が完了`);
+  showStatus('success', '✅ ' + done + '/' + files.length + ' 枚完了');
 
-  // Add reset button
-  const resetBtn = document.createElement('button');
-  resetBtn.className = 'btn-reset';
-  resetBtn.textContent = '🔄 新しい画像を処理';
-  resetBtn.onclick = resetAll;
-  batchList.appendChild(resetBtn);
-
-  // Add download all button if multiple results
-  if (batchResults.length > 1) {
-    const dlAllBtn = document.createElement('button');
-    dlAllBtn.className = 'btn btn-primary';
-    dlAllBtn.style.width = '100%';
-    dlAllBtn.style.marginTop = '8px';
-    dlAllBtn.textContent = '💾 すべて保存';
-    dlAllBtn.onclick = downloadAll;
-    batchList.insertBefore(dlAllBtn, resetBtn);
-  }
-}
-
-function createBatchItem(file, index) {
-  const el = document.createElement('div');
-  el.className = 'batch-item';
-
-  const thumb = document.createElement('img');
-  thumb.className = 'batch-item-thumb';
-  thumb.src = URL.createObjectURL(file);
-
-  const info = document.createElement('div');
-  info.className = 'batch-item-info';
-
-  const name = document.createElement('div');
-  name.className = 'batch-item-name';
-  name.textContent = file.name;
-
-  const statusEl = document.createElement('div');
-  statusEl.className = 'batch-item-status';
-  statusEl.textContent = '処理中...';
-
-  info.appendChild(name);
-  info.appendChild(statusEl);
-
-  const actions = document.createElement('div');
-  actions.className = 'batch-item-actions';
-
-  el.appendChild(thumb);
-  el.appendChild(info);
-  el.appendChild(actions);
-
-  return {
-    element: el,
-    setDone: (url, blob, outName) => {
-      statusEl.textContent = '完了';
-      statusEl.className = 'batch-item-status done';
-      const dlBtn = document.createElement('button');
-      dlBtn.className = 'batch-item-btn';
-      dlBtn.textContent = '💾';
-      dlBtn.onclick = () => downloadBlob(blob, outName);
-      actions.appendChild(dlBtn);
-    },
-    setError: (msg) => {
-      statusEl.textContent = 'エラー';
-      statusEl.className = 'batch-item-status error';
-    }
-  };
-}
-
-function downloadBlob(blob, filename) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function downloadAll() {
-  batchResults.forEach(r => downloadBlob(r.blob, r.name));
-}
-
-// Tab switching
-window.switchTab = function(tab) {
-  document.querySelectorAll('.compare-tab').forEach(t => t.classList.remove('active'));
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-
-  document.getElementById('resultView').classList.toggle('active', tab === 'result');
-  document.getElementById('originalView').classList.toggle('active', tab === 'original');
-};
-
-// Download single result
-window.downloadResult = function() {
-  if (!currentBlob) return;
-  downloadBlob(currentBlob, currentFileName);
-};
-
-// Copy to clipboard
-window.copyToClipboard = async function() {
-  if (!currentBlob) return;
-  try {
-    await navigator.clipboard.write([
-      new ClipboardItem({ 'image/png': currentBlob })
-    ]);
-    showStatus('success', '📋 クリップボードにコピーしました');
-  } catch (err) {
-    showStatus('error', '❌ コピーに失敗しました（ブラウザの制限）');
-  }
-};
-
-// Reset
-window.resetAll = function() {
-  results.classList.remove('active');
-  processing.classList.remove('active');
-  batchList.innerHTML = '';
-  dropZone.style.display = '';
-  showStatus('', '');
-  currentBlob = null;
-  batchResults = [];
-};
-
-function showStatus(type, msg) {
-  if (!msg) {
-    status.classList.remove('active');
-    return;
-  }
-  status.className = `status active ${type}`;
-  status.textContent = msg;
-  if (type === 'success') {
-    setTimeout(() => status.classList.remove('active'), 4000);
-  }
+  const rb = document.createElement('button');
+  rb.className = 'btn-reset';
+  rb.textContent = '🔄 新しい画像を処理';
+  rb.addEventListener('click', resetAll);
+  batchList.appendChild(rb);
 }
 </script>
 
