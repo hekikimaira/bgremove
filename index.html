@@ -338,27 +338,31 @@
       progressBar.style.width = '85%';
       progressText.textContent = 'マスクを適用中...';
 
-      // Post-process: get mask from output tensor
-      // output shape: [batch, channels, H, W] e.g. [1, 1, 1024, 1024]
-      const maskTensor = output[0];
-      // Clamp 0-1, scale to 255
-      const maskClamped = maskTensor.clamp(0, 1).mul(255).to('uint8');
-
-      // Get raw data and dims
-      const maskDims = maskClamped.dims; // e.g. [1, 1024, 1024] or [1, 1, 1024, 1024]
+      // Get mask from output - handle various tensor shapes
+      const maskTensor = output[0].mul(255).to('uint8');
+      const maskDims = maskTensor.dims;
       const maskH = maskDims[maskDims.length - 2];
       const maskW = maskDims[maskDims.length - 1];
-      const maskFlat = maskClamped.data; // flat Uint8Array
+      const maskFlat = maskTensor.data;
+      const totalMaskPx = maskW * maskH;
+      const offset = maskFlat.length - totalMaskPx;
 
-      // Resize mask to original image size using a temp canvas
+      // Draw original to canvas using toCanvas()
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img.toCanvas(), 0, 0);
+
+      // Get pixel data
+      const pixelData = ctx.getImageData(0, 0, img.width, img.height);
+
+      // Create mask at model resolution, then resize via canvas
       const maskCanvas = document.createElement('canvas');
       maskCanvas.width = maskW;
       maskCanvas.height = maskH;
       const maskCtx = maskCanvas.getContext('2d');
       const maskImgData = maskCtx.createImageData(maskW, maskH);
-      const totalMaskPx = maskW * maskH;
-      // maskFlat may have more elements if multi-dim; just use last WxH
-      const offset = maskFlat.length - totalMaskPx;
       for (let i = 0; i < totalMaskPx; i++) {
         const v = maskFlat[offset + i];
         maskImgData.data[i * 4]     = v;
@@ -368,57 +372,37 @@
       }
       maskCtx.putImageData(maskImgData, 0, 0);
 
-      // Resize to original dimensions
+      // Resize mask to original image size with high quality
       const resizeCanvas = document.createElement('canvas');
       resizeCanvas.width = img.width;
       resizeCanvas.height = img.height;
       const resizeCtx = resizeCanvas.getContext('2d');
+      resizeCtx.imageSmoothingEnabled = true;
+      resizeCtx.imageSmoothingQuality = 'high';
       resizeCtx.drawImage(maskCanvas, 0, 0, img.width, img.height);
-      const resizedData = resizeCtx.getImageData(0, 0, img.width, img.height).data;
+      const resizedMask = resizeCtx.getImageData(0, 0, img.width, img.height).data;
 
-      // Extract R channel as mask, apply threshold
+      // Apply mask as alpha with threshold
       const threshold = parseInt(threshSlider.value);
-      const maskData = new Uint8Array(img.width * img.height);
-      for (let i = 0; i < maskData.length; i++) {
-        const v = resizedData[i * 4]; // R channel = mask value
+      for (let i = 0; i < pixelData.data.length / 4; i++) {
+        const v = resizedMask[i * 4]; // R channel of mask
+        let alpha;
         if (threshold === 0) {
-          // No threshold: use raw mask as-is (soft edges)
-          maskData[i] = v;
+          alpha = v;
         } else {
-          // Apply threshold: values above threshold become proportionally opaque
-          // Smooth threshold using a sigmoid-like curve for natural edges
-          const t = threshold;
-          if (v >= t) {
-            maskData[i] = 255;
-          } else if (v >= t * 0.5) {
-            // Smooth falloff zone
-            maskData[i] = Math.round(255 * (v - t * 0.5) / (t * 0.5));
+          const lo = threshold * 0.4;
+          const hi = threshold;
+          if (v >= hi) {
+            alpha = 255;
+          } else if (v > lo) {
+            alpha = Math.round(255 * (v - lo) / (hi - lo));
           } else {
-            maskData[i] = 0;
+            alpha = 0;
           }
         }
+        pixelData.data[i * 4 + 3] = alpha;
       }
-
-      // Create output canvas
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-
-      // Compose: original RGB + mask as alpha
-      const imgData = ctx.createImageData(img.width, img.height);
-      const srcChannels = img.channels; // typically 3 (RGB) or 4 (RGBA)
-      const totalPixels = img.width * img.height;
-
-      for (let i = 0; i < totalPixels; i++) {
-        const srcIdx = i * srcChannels;
-        const dstIdx = i * 4;
-        imgData.data[dstIdx]     = img.data[srcIdx];     // R
-        imgData.data[dstIdx + 1] = img.data[srcIdx + 1]; // G
-        imgData.data[dstIdx + 2] = img.data[srcIdx + 2]; // B
-        imgData.data[dstIdx + 3] = maskData[i];           // A from mask
-      }
-      ctx.putImageData(imgData, 0, 0);
+      ctx.putImageData(pixelData, 0, 0);
 
       progressBar.style.width = '95%';
 
