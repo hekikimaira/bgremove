@@ -129,8 +129,14 @@
         <span id="blurLabel">0.5</span>
       </div>
       <div class="range-labels"><span>シャープ</span><span>なめらか</span></div>
+      <div class="setting-row" style="margin-top:8px">
+        <label>パディング</label>
+        <input type="range" id="padSlider" min="0" max="15" value="5" step="1">
+        <span id="padLabel">5%</span>
+      </div>
+      <div class="range-labels"><span>なし</span><span>広め（端の切れ防止）</span></div>
     </div>
-    <div class="reprocess-note">スライダーを調整後「🔄 再処理」で反映</div>
+    <div class="reprocess-note">エッジ収縮・ぼかし→「再処理」で即反映 ／ パディング変更→新しい画像で反映</div>
 
     <button class="btn-reset" id="btnReset">📁 新しい画像を処理</button>
   </div>
@@ -168,6 +174,10 @@ const blurLabel = $('blurLabel');
 erodeSlider.addEventListener('input', () => erodeLabel.textContent = erodeSlider.value);
 blurSlider.addEventListener('input', () => blurLabel.textContent = blurSlider.value);
 
+const padSlider = $('padSlider');
+const padLabel = $('padLabel');
+padSlider.addEventListener('input', () => padLabel.textContent = padSlider.value + '%');
+
 // === Model Loading ===
 async function ensureModel() {
   if (aiModel && aiProcessor) return;
@@ -197,7 +207,7 @@ async function ensureModel() {
   progressBar.style.width = '50%';
 }
 
-// === Core: Generate raw mask ===
+// === Core: Generate raw mask with padding ===
 async function generateMask(file) {
   const origURL = URL.createObjectURL(file);
   $('originalImg').src = origURL;
@@ -206,11 +216,43 @@ async function generateMask(file) {
   progressBar.style.width = '55%';
 
   const img = await RawImage.fromURL(origURL);
+  const origW = img.width, origH = img.height;
+
+  // Add padding to help model detect objects at image edges
+  const padPct = parseInt(padSlider.value) / 100;
+  const padX = Math.round(origW * padPct);
+  const padY = Math.round(origH * padPct);
+  const padW = origW + padX * 2;
+  const padH = origH + padY * 2;
+
+  // Create padded canvas with edge-extended background
+  const padCanvas = document.createElement('canvas');
+  padCanvas.width = padW; padCanvas.height = padH;
+  const padCtx = padCanvas.getContext('2d');
+
+  const origCanvas = img.toCanvas();
+
+  // Fill with edge colors by stretching edges (better than solid color)
+  // First fill the entire canvas with the image scaled to padded size
+  padCtx.drawImage(origCanvas, 0, 0, padW, padH);
+  // Apply a heavy blur to make it a soft background
+  const blurBg = document.createElement('canvas');
+  blurBg.width = padW; blurBg.height = padH;
+  const blurBgCtx = blurBg.getContext('2d');
+  blurBgCtx.filter = 'blur(30px)';
+  blurBgCtx.drawImage(padCanvas, 0, 0);
+  padCtx.drawImage(blurBg, 0, 0);
+  // Draw the original image centered on top
+  padCtx.drawImage(origCanvas, padX, padY);
 
   progressText.textContent = '前処理中...';
   progressBar.style.width = '60%';
 
-  const { pixel_values } = await aiProcessor(img);
+  // Convert padded canvas to RawImage for model
+  const padImgURL = padCanvas.toDataURL('image/png');
+  const paddedImg = await RawImage.fromURL(padImgURL);
+
+  const { pixel_values } = await aiProcessor(paddedImg);
 
   progressText.textContent = 'AI推論中...';
   progressBar.style.width = '70%';
@@ -240,28 +282,34 @@ async function generateMask(file) {
   }
   mctx.putImageData(mid, 0, 0);
 
-  // Resize mask to original image dimensions
-  const rc = document.createElement('canvas');
-  rc.width = img.width; rc.height = img.height;
-  const rctx = rc.getContext('2d');
-  rctx.imageSmoothingEnabled = true;
-  rctx.imageSmoothingQuality = 'high';
-  rctx.drawImage(mc, 0, 0, img.width, img.height);
+  // Resize mask to PADDED image dimensions
+  const fullMaskCanvas = document.createElement('canvas');
+  fullMaskCanvas.width = padW; fullMaskCanvas.height = padH;
+  const fmctx = fullMaskCanvas.getContext('2d');
+  fmctx.imageSmoothingEnabled = true;
+  fmctx.imageSmoothingQuality = 'high';
+  fmctx.drawImage(mc, 0, 0, padW, padH);
 
-  // Store raw mask canvas
+  // Crop mask back to original dimensions (remove padding)
+  const rc = document.createElement('canvas');
+  rc.width = origW; rc.height = origH;
+  const rctx = rc.getContext('2d');
+  rctx.drawImage(fullMaskCanvas, padX, padY, origW, origH, 0, 0, origW, origH);
+
+  // Store raw mask canvas (original size, no padding)
   rawMaskCanvas = rc;
 
   // Store original image canvas
   const oc = document.createElement('canvas');
-  oc.width = img.width; oc.height = img.height;
+  oc.width = origW; oc.height = origH;
   const octx = oc.getContext('2d');
-  octx.drawImage(img.toCanvas(), 0, 0);
+  octx.drawImage(origCanvas, 0, 0);
   originalImageCanvas = oc;
 
   // Show raw mask
   $('maskImg').src = rc.toDataURL();
 
-  return { width: img.width, height: img.height };
+  return { width: origW, height: origH };
 }
 
 // === Post-processing: erode mask edges & blur ===
