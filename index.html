@@ -6,168 +6,65 @@
 <title>背景透過ツール</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap');
-
   :root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --bg-card: #1a1a28;
-    --accent: #6c5ce7;
-    --accent-glow: rgba(108,92,231,0.3);
-    --accent-bright: #a29bfe;
-    --success: #00d2d3;
-    --warning: #feca57;
-    --danger: #ff6b6b;
-    --text-primary: #e8e8f0;
-    --text-secondary: #8888a8;
-    --text-dim: #555570;
-    --border: #2a2a40;
-    --radius: 12px;
+    --bg-primary:#0a0a0f; --bg-secondary:#12121a; --bg-card:#1a1a28;
+    --accent:#6c5ce7; --accent-glow:rgba(108,92,231,0.3); --accent-bright:#a29bfe;
+    --success:#00d2d3; --warning:#feca57; --danger:#ff6b6b;
+    --text-primary:#e8e8f0; --text-secondary:#8888a8; --text-dim:#555570;
+    --border:#2a2a40; --radius:12px;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg-primary); color: var(--text-primary);
-    min-height: 100dvh;
-  }
-  .app {
-    max-width: 640px; margin: 0 auto;
-    padding: 16px; padding-bottom: 100px;
-  }
-  .header { text-align: center; padding: 24px 0 20px; }
-  .header h1 {
-    font-size: 1.5rem; font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-bright), var(--success));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .header p { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
-
-  .file-label {
-    display: block; padding: 20px; text-align: center;
-    background: var(--accent); color: white; border-radius: var(--radius);
-    font-size: 1rem; font-weight: 500; cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.2s;
-  }
-  .file-label:active { background: var(--accent-bright); transform: scale(0.98); }
-  .file-label input[type="file"] {
-    position: absolute; width: 1px; height: 1px;
-    opacity: 0; overflow: hidden;
-  }
-
-  .drop-zone {
-    margin-top: 12px; border: 2px dashed var(--border);
-    border-radius: var(--radius); padding: 20px; text-align: center;
-    background: var(--bg-secondary); color: var(--text-dim); font-size: 0.8rem;
-  }
-  .drop-zone.drag-over { border-color: var(--accent); }
-
-  .notice {
-    margin-top: 10px; padding: 8px 12px; border-radius: 8px;
-    background: rgba(254,202,87,0.08); border: 1px solid rgba(254,202,87,0.2);
-    color: var(--warning); font-size: 0.72rem; line-height: 1.5;
-  }
-  .settings {
-    margin-top: 10px; padding: 14px;
-    background: var(--bg-secondary); border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-  .settings-title {
-    font-size: 0.7rem; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
-  }
-
-  .processing { display:none; margin-top:24px; text-align:center; }
-  .processing.active { display:block; }
-  .progress-box {
-    background: var(--bg-secondary); border-radius: var(--radius);
-    padding: 32px 24px; border: 1px solid var(--border);
-  }
-  .spinner {
-    width:44px; height:44px; border:3px solid var(--border);
-    border-top-color: var(--accent); border-radius:50%;
-    animation: spin 1s linear infinite; margin: 0 auto 14px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .progress-text { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; }
-  .progress-bar-track {
-    width:100%; height:4px; background:var(--bg-card);
-    border-radius:2px; overflow:hidden;
-  }
-  .progress-bar-fill {
-    height:100%; background:linear-gradient(90deg, var(--accent), var(--success));
-    border-radius:2px; transition: width 0.3s; width:0%;
-  }
-  .progress-detail { font-size:0.65rem; color:var(--text-dim); margin-top:6px; }
-
-  .results { display:none; margin-top:24px; }
-  .results.active { display:block; }
-  .compare-box {
-    background: var(--bg-secondary); border-radius: var(--radius);
-    border: 1px solid var(--border); overflow: hidden;
-  }
-  .tabs { display:flex; border-bottom:1px solid var(--border); }
-  .tab {
-    flex:1; padding:12px; text-align:center; font-size:0.8rem;
-    cursor:pointer; color:var(--text-secondary); background:transparent;
-    border:none; font-family:'Noto Sans JP',sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .tab.active {
-    color:var(--accent-bright); background:var(--bg-card);
-    box-shadow: inset 0 -2px 0 var(--accent);
-  }
-  .img-view { display:none; width:100%; }
-  .img-view.active { display:block; }
-  .img-view img { display:block; width:100%; height:auto; }
-  .checker-bg {
-    background-image:
-      linear-gradient(45deg, #1a1a28 25%, transparent 25%),
-      linear-gradient(-45deg, #1a1a28 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #1a1a28 75%),
-      linear-gradient(-45deg, transparent 75%, #1a1a28 75%);
-    background-size:16px 16px;
-    background-position:0 0, 0 8px, 8px -8px, -8px 0;
-    background-color:#0f0f1a;
-  }
-  .actions {
-    display:flex; gap:8px; padding:12px;
-    border-top:1px solid var(--border);
-  }
-  .btn {
-    flex:1; padding:12px; border:none; border-radius:8px;
-    font-size:0.85rem; font-weight:500; cursor:pointer;
-    font-family:'Noto Sans JP',sans-serif;
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .btn-primary { background:var(--accent); color:white; }
-  .btn-primary:active { background:var(--accent-bright); }
-  .btn-secondary {
-    background:var(--bg-card); color:var(--text-secondary);
-    border:1px solid var(--border);
-  }
-  .btn-reset {
-    margin-top:12px; width:100%; padding:12px;
-    background:transparent; color:var(--text-dim);
-    border:1px dashed var(--border); border-radius:8px;
-    font-size:0.8rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif;
-  }
-
-  .status {
-    margin-top:12px; padding:10px 14px; border-radius:8px;
-    font-size:0.8rem; display:none;
-  }
-  .status.active { display:block; }
-  .status.error { background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.3); color:var(--danger); }
-  .status.success { background:rgba(0,210,211,0.1); border:1px solid rgba(0,210,211,0.3); color:var(--success); }
-
-  .hidden { display:none !important; }
-
-  .footer {
-    text-align:center; margin-top:32px;
-    font-size:0.65rem; color:var(--text-dim);
-  }
-  .footer a { color:var(--accent-bright); text-decoration:none; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100dvh}
+  .app{max-width:640px;margin:0 auto;padding:16px;padding-bottom:100px}
+  .header{text-align:center;padding:24px 0 20px}
+  .header h1{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--accent-bright),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .header p{font-size:.75rem;color:var(--text-dim);margin-top:4px}
+  .file-label{display:block;padding:20px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--radius);font-size:1rem;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .2s}
+  .file-label:active{background:var(--accent-bright);transform:scale(.98)}
+  .file-label input[type="file"]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+  .drop-zone{margin-top:12px;border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;background:var(--bg-secondary);color:var(--text-dim);font-size:.8rem}
+  .drop-zone.drag-over{border-color:var(--accent)}
+  .notice{margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(254,202,87,.08);border:1px solid rgba(254,202,87,.2);color:var(--warning);font-size:.72rem;line-height:1.5}
+  .settings{margin-top:10px;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius)}
+  .settings-title{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .setting-row label{font-size:.82rem;color:var(--text-secondary)}
+  .setting-row span{font-size:.8rem;color:var(--accent-bright);min-width:30px;text-align:right}
+  .setting-row input[type="range"]{flex:1;margin:0 10px;accent-color:var(--accent)}
+  .range-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-dim);margin-top:2px}
+  .processing{display:none;margin-top:24px;text-align:center}
+  .processing.active{display:block}
+  .progress-box{background:var(--bg-secondary);border-radius:var(--radius);padding:32px 24px;border:1px solid var(--border)}
+  .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .progress-text{font-size:.85rem;color:var(--text-secondary);margin-bottom:10px}
+  .progress-bar-track{width:100%;height:4px;background:var(--bg-card);border-radius:2px;overflow:hidden}
+  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));border-radius:2px;transition:width .3s;width:0%}
+  .progress-detail{font-size:.65rem;color:var(--text-dim);margin-top:6px}
+  .results{display:none;margin-top:24px}
+  .results.active{display:block}
+  .compare-box{background:var(--bg-secondary);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+  .tabs{display:flex;border-bottom:1px solid var(--border)}
+  .tab{flex:1;padding:12px;text-align:center;font-size:.8rem;cursor:pointer;color:var(--text-secondary);background:transparent;border:none;font-family:'Noto Sans JP',sans-serif;-webkit-tap-highlight-color:transparent}
+  .tab.active{color:var(--accent-bright);background:var(--bg-card);box-shadow:inset 0 -2px 0 var(--accent)}
+  .img-view{display:none;width:100%}
+  .img-view.active{display:block}
+  .img-view img{display:block;width:100%;height:auto}
+  .checker-bg{background-image:linear-gradient(45deg,#1a1a28 25%,transparent 25%),linear-gradient(-45deg,#1a1a28 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#1a1a28 75%),linear-gradient(-45deg,transparent 75%,#1a1a28 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;background-color:#0f0f1a}
+  .actions{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+  .btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:active{background:var(--accent-bright)}
+  .btn-secondary{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border)}
+  .btn-reset{margin-top:12px;width:100%;padding:12px;background:transparent;color:var(--text-dim);border:1px dashed var(--border);border-radius:8px;font-size:.8rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+  .status{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.8rem;display:none}
+  .status.active{display:block}
+  .status.error{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);color:var(--danger)}
+  .status.success{background:rgba(0,210,211,.1);border:1px solid rgba(0,210,211,.3);color:var(--success)}
+  .hidden{display:none !important}
+  .footer{text-align:center;margin-top:32px;font-size:.65rem;color:var(--text-dim)}
+  .footer a{color:var(--accent-bright);text-decoration:none}
+  .reprocess-note{font-size:.7rem;color:var(--text-dim);text-align:center;margin-top:6px}
 </style>
 </head>
 <body>
@@ -188,28 +85,13 @@
     <div class="notice">
       ⚡ 初回はAIモデル(約45MB)のダウンロードが必要です。2回目以降はキャッシュ済みで高速。
     </div>
-    <div class="settings">
-      <div class="settings-title">⚙ 設定</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <label style="font-size:0.85rem;color:var(--text-secondary);">マスク閾値</label>
-        <span id="threshLabel" style="font-size:0.8rem;color:var(--accent-bright);">128</span>
-      </div>
-      <input type="range" id="threshSlider" min="0" max="255" value="128"
-        style="width:100%;accent-color:var(--accent);">
-      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);margin-top:2px;">
-        <span>柔らかい (0)</span>
-        <span>くっきり (255)</span>
-      </div>
-    </div>
   </div>
 
   <div class="processing" id="processing">
     <div class="progress-box">
       <div class="spinner"></div>
       <div class="progress-text" id="progressText">読み込み中...</div>
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="progressBar"></div>
-      </div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar"></div></div>
       <div class="progress-detail" id="progressDetail"></div>
     </div>
   </div>
@@ -221,19 +103,36 @@
       <div class="tabs">
         <button class="tab active" id="tabResult">透過結果</button>
         <button class="tab" id="tabOriginal">元画像</button>
+        <button class="tab" id="tabMask">マスク</button>
       </div>
-      <div class="img-view checker-bg active" id="resultView">
-        <img id="resultImg">
-      </div>
-      <div class="img-view" id="originalView">
-        <img id="originalImg">
-      </div>
+      <div class="img-view checker-bg active" id="resultView"><img id="resultImg"></div>
+      <div class="img-view" id="originalView"><img id="originalImg"></div>
+      <div class="img-view" id="maskView"><img id="maskImg"></div>
       <div class="actions">
         <button class="btn btn-primary" id="btnDownload">💾 保存</button>
-        <button class="btn btn-secondary" id="btnCopy">📋 コピー</button>
+        <button class="btn btn-secondary" id="btnReprocess">🔄 再処理</button>
       </div>
     </div>
-    <button class="btn-reset" id="btnReset">🔄 新しい画像を処理</button>
+
+    <!-- Post-processing controls -->
+    <div class="settings" style="margin-top:12px;">
+      <div class="settings-title">🎛 後処理（保存前に調整）</div>
+      <div class="setting-row">
+        <label>エッジ収縮</label>
+        <input type="range" id="erodeSlider" min="0" max="5" value="1">
+        <span id="erodeLabel">1</span>
+      </div>
+      <div class="range-labels"><span>なし</span><span>強め</span></div>
+      <div class="setting-row" style="margin-top:8px">
+        <label>ぼかし</label>
+        <input type="range" id="blurSlider" min="0" max="3" value="0.5" step="0.5">
+        <span id="blurLabel">0.5</span>
+      </div>
+      <div class="range-labels"><span>シャープ</span><span>なめらか</span></div>
+    </div>
+    <div class="reprocess-note">スライダーを調整後「🔄 再処理」で反映</div>
+
+    <button class="btn-reset" id="btnReset">📁 新しい画像を処理</button>
   </div>
 
   <div class="footer">
@@ -242,246 +141,301 @@
 </div>
 
 <script type="module">
-  // jsdelivr CDN for Transformers.js v3
-  import { AutoModel, AutoProcessor, RawImage, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.1';
+import { AutoModel, AutoProcessor, RawImage, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.1';
 
-  // Disable local model check
-  env.allowLocalModels = false;
+env.allowLocalModels = false;
 
-  const $ = id => document.getElementById(id);
-  const inputSection = $('inputSection');
-  const fileInput = $('fileInput');
-  const dropZone = $('dropZone');
-  const processing = $('processing');
-  const progressText = $('progressText');
-  const progressBar = $('progressBar');
-  const progressDetail = $('progressDetail');
-  const results = $('results');
-  const resultImg = $('resultImg');
-  const originalImg = $('originalImg');
-  const statusEl = $('status');
+const $ = id => document.getElementById(id);
+const inputSection = $('inputSection');
+const processing = $('processing');
+const progressText = $('progressText');
+const progressBar = $('progressBar');
+const progressDetail = $('progressDetail');
+const results = $('results');
+const statusEl = $('status');
 
-  let model = null;
-  let processor = null;
-  let currentBlob = null;
-  let currentFileName = 'output.png';
+let aiModel = null, aiProcessor = null;
+let currentBlob = null, currentFileName = 'output.png';
+// Store raw mask and original image for reprocessing
+let rawMaskCanvas = null;
+let originalImageCanvas = null;
 
-  // Threshold slider
-  const threshSlider = $('threshSlider');
-  const threshLabel = $('threshLabel');
-  threshSlider.addEventListener('input', () => {
-    threshLabel.textContent = threshSlider.value;
+const erodeSlider = $('erodeSlider');
+const erodeLabel = $('erodeLabel');
+const blurSlider = $('blurSlider');
+const blurLabel = $('blurLabel');
+
+erodeSlider.addEventListener('input', () => erodeLabel.textContent = erodeSlider.value);
+blurSlider.addEventListener('input', () => blurLabel.textContent = blurSlider.value);
+
+// === Model Loading ===
+async function ensureModel() {
+  if (aiModel && aiProcessor) return;
+  progressText.textContent = 'AIモデルを読み込み中...';
+  progressBar.style.width = '15%';
+  progressDetail.textContent = 'briaai/RMBG-1.4';
+
+  aiModel = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
+    config: { model_type: 'custom' },
   });
+  progressBar.style.width = '35%';
 
-  // === Load model ===
-  async function ensureModel() {
-    if (model && processor) return;
-
-    progressText.textContent = 'AIモデルを読み込み中...';
-    progressBar.style.width = '15%';
-    progressDetail.textContent = 'briaai/RMBG-1.4 (初回のみダウンロード)';
-
-    model = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
-      config: { model_type: 'custom' },
-    });
-
-    progressBar.style.width = '40%';
-    progressText.textContent = 'プロセッサを読み込み中...';
-
-    processor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
-      config: {
-        do_normalize: true,
-        do_pad: false,
-        do_rescale: true,
-        do_resize: true,
-        image_mean: [0.5, 0.5, 0.5],
-        image_std: [1, 1, 1],
-        size: { width: 1024, height: 1024 },
-      }
-    });
-
-    progressBar.style.width = '50%';
-  }
-
-  // === Process image ===
-  async function processImage(file) {
-    showStatus('', '');
-    results.classList.remove('active');
-    processing.classList.add('active');
-    inputSection.classList.add('hidden');
-
-    try {
-      await ensureModel();
-
-      // Show original
-      const origURL = URL.createObjectURL(file);
-      originalImg.src = origURL;
-
-      progressText.textContent = '画像を解析中...';
-      progressBar.style.width = '55%';
-      progressDetail.textContent = file.name;
-
-      // Load image
-      const img = await RawImage.fromURL(origURL);
-
-      progressBar.style.width = '65%';
-      progressText.textContent = '背景を除去中...';
-
-      // Process
-      const { pixel_values } = await processor(img);
-
-      progressBar.style.width = '75%';
-
-      // Predict
-      const { output } = await model({ input: pixel_values });
-
-      progressBar.style.width = '85%';
-      progressText.textContent = 'マスクを適用中...';
-
-      // Get mask from output - handle various tensor shapes
-      const maskTensor = output[0].mul(255).to('uint8');
-      const maskDims = maskTensor.dims;
-      const maskH = maskDims[maskDims.length - 2];
-      const maskW = maskDims[maskDims.length - 1];
-      const maskFlat = maskTensor.data;
-      const totalMaskPx = maskW * maskH;
-      const offset = maskFlat.length - totalMaskPx;
-
-      // Draw original to canvas using toCanvas()
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img.toCanvas(), 0, 0);
-
-      // Get pixel data
-      const pixelData = ctx.getImageData(0, 0, img.width, img.height);
-
-      // Create mask at model resolution, then resize via canvas
-      const maskCanvas = document.createElement('canvas');
-      maskCanvas.width = maskW;
-      maskCanvas.height = maskH;
-      const maskCtx = maskCanvas.getContext('2d');
-      const maskImgData = maskCtx.createImageData(maskW, maskH);
-      for (let i = 0; i < totalMaskPx; i++) {
-        const v = maskFlat[offset + i];
-        maskImgData.data[i * 4]     = v;
-        maskImgData.data[i * 4 + 1] = v;
-        maskImgData.data[i * 4 + 2] = v;
-        maskImgData.data[i * 4 + 3] = 255;
-      }
-      maskCtx.putImageData(maskImgData, 0, 0);
-
-      // Resize mask to original image size with high quality
-      const resizeCanvas = document.createElement('canvas');
-      resizeCanvas.width = img.width;
-      resizeCanvas.height = img.height;
-      const resizeCtx = resizeCanvas.getContext('2d');
-      resizeCtx.imageSmoothingEnabled = true;
-      resizeCtx.imageSmoothingQuality = 'high';
-      resizeCtx.drawImage(maskCanvas, 0, 0, img.width, img.height);
-      const resizedMask = resizeCtx.getImageData(0, 0, img.width, img.height).data;
-
-      // Apply mask as alpha with threshold
-      const threshold = parseInt(threshSlider.value);
-      for (let i = 0; i < pixelData.data.length / 4; i++) {
-        const v = resizedMask[i * 4]; // R channel of mask
-        let alpha;
-        if (threshold === 0) {
-          alpha = v;
-        } else {
-          const lo = threshold * 0.4;
-          const hi = threshold;
-          if (v >= hi) {
-            alpha = 255;
-          } else if (v > lo) {
-            alpha = Math.round(255 * (v - lo) / (hi - lo));
-          } else {
-            alpha = 0;
-          }
-        }
-        pixelData.data[i * 4 + 3] = alpha;
-      }
-      ctx.putImageData(pixelData, 0, 0);
-
-      progressBar.style.width = '95%';
-
-      // Convert to blob
-      const blob = await new Promise(resolve =>
-        canvas.toBlob(resolve, 'image/png')
-      );
-
-      currentBlob = blob;
-      currentFileName = file.name.replace(/\.[^.]+$/, '') + '_transparent.png';
-      resultImg.src = URL.createObjectURL(blob);
-
-      progressBar.style.width = '100%';
-      processing.classList.remove('active');
-      results.classList.add('active');
-      showStatus('success', '✅ 背景透過が完了しました');
-
-    } catch(err) {
-      processing.classList.remove('active');
-      inputSection.classList.remove('hidden');
-      showStatus('error', '❌ エラー: ' + err.message);
-      console.error(err);
+  aiProcessor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
+    config: {
+      do_normalize: true,
+      do_pad: false,
+      do_rescale: true,
+      do_resize: true,
+      image_mean: [0.5, 0.5, 0.5],
+      image_std: [1, 1, 1],
+      feature_extractor_type: 'ImageFeatureExtractor',
+      resample: 2,
+      rescale_factor: 0.00392156862745098,
+      size: { width: 1024, height: 1024 },
     }
+  });
+  progressBar.style.width = '50%';
+}
+
+// === Core: Generate raw mask ===
+async function generateMask(file) {
+  const origURL = URL.createObjectURL(file);
+  $('originalImg').src = origURL;
+
+  progressText.textContent = '画像を読み込み中...';
+  progressBar.style.width = '55%';
+
+  const img = await RawImage.fromURL(origURL);
+
+  progressText.textContent = '前処理中...';
+  progressBar.style.width = '60%';
+
+  const { pixel_values } = await aiProcessor(img);
+
+  progressText.textContent = 'AI推論中...';
+  progressBar.style.width = '70%';
+
+  const { output } = await aiModel({ input: pixel_values });
+
+  progressText.textContent = 'マスク生成中...';
+  progressBar.style.width = '85%';
+
+  // Extract mask data from tensor
+  const maskTensor = output[0].mul(255).to('uint8');
+  const dims = maskTensor.dims;
+  const mH = dims[dims.length - 2];
+  const mW = dims[dims.length - 1];
+  const flat = maskTensor.data;
+  const px = mH * mW;
+  const off = flat.length - px;
+
+  // Create mask canvas at model resolution
+  const mc = document.createElement('canvas');
+  mc.width = mW; mc.height = mH;
+  const mctx = mc.getContext('2d');
+  const mid = mctx.createImageData(mW, mH);
+  for (let i = 0; i < px; i++) {
+    const v = flat[off + i];
+    mid.data[i*4] = v; mid.data[i*4+1] = v; mid.data[i*4+2] = v; mid.data[i*4+3] = 255;
+  }
+  mctx.putImageData(mid, 0, 0);
+
+  // Resize mask to original image dimensions
+  const rc = document.createElement('canvas');
+  rc.width = img.width; rc.height = img.height;
+  const rctx = rc.getContext('2d');
+  rctx.imageSmoothingEnabled = true;
+  rctx.imageSmoothingQuality = 'high';
+  rctx.drawImage(mc, 0, 0, img.width, img.height);
+
+  // Store raw mask canvas
+  rawMaskCanvas = rc;
+
+  // Store original image canvas
+  const oc = document.createElement('canvas');
+  oc.width = img.width; oc.height = img.height;
+  const octx = oc.getContext('2d');
+  octx.drawImage(img.toCanvas(), 0, 0);
+  originalImageCanvas = oc;
+
+  // Show raw mask
+  $('maskImg').src = rc.toDataURL();
+
+  return { width: img.width, height: img.height };
+}
+
+// === Post-processing: erode mask edges & blur ===
+function postProcessMask(srcCanvas, erodeRadius, blurRadius) {
+  const w = srcCanvas.width, h = srcCanvas.height;
+  const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h);
+
+  // Extract single-channel mask
+  const mask = new Uint8Array(w * h);
+  for (let i = 0; i < mask.length; i++) mask[i] = src.data[i * 4];
+
+  // Erode: shrink foreground by erodeRadius pixels
+  let current = mask;
+  for (let pass = 0; pass < erodeRadius; pass++) {
+    const next = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const idx = y * w + x;
+        let minVal = current[idx];
+        // Check 4-connected neighbors
+        if (x > 0) minVal = Math.min(minVal, current[idx - 1]);
+        if (x < w-1) minVal = Math.min(minVal, current[idx + 1]);
+        if (y > 0) minVal = Math.min(minVal, current[idx - w]);
+        if (y < h-1) minVal = Math.min(minVal, current[idx + w]);
+        next[idx] = minVal;
+      }
+    }
+    current = next;
   }
 
-  // === Events ===
-  fileInput.addEventListener('change', function() {
-    const files = Array.from(this.files).filter(f => f.type.startsWith('image/'));
-    if (files.length > 0) processImage(files[0]);
-    this.value = '';
-  });
+  // Apply Gaussian-like blur via canvas for edge smoothing
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  const oid = octx.createImageData(w, h);
+  for (let i = 0; i < current.length; i++) {
+    oid.data[i*4] = current[i];
+    oid.data[i*4+1] = current[i];
+    oid.data[i*4+2] = current[i];
+    oid.data[i*4+3] = 255;
+  }
+  octx.putImageData(oid, 0, 0);
 
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault(); dropZone.classList.remove('drag-over');
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-    if (files.length > 0) processImage(files[0]);
-  });
+  if (blurRadius > 0) {
+    const blurred = document.createElement('canvas');
+    blurred.width = w; blurred.height = h;
+    const bctx = blurred.getContext('2d');
+    bctx.filter = `blur(${blurRadius}px)`;
+    bctx.drawImage(out, 0, 0);
+    return blurred;
+  }
 
-  $('tabResult').addEventListener('click', () => {
-    $('tabResult').classList.add('active'); $('tabOriginal').classList.remove('active');
-    $('resultView').classList.add('active'); $('originalView').classList.remove('active');
-  });
-  $('tabOriginal').addEventListener('click', () => {
-    $('tabOriginal').classList.add('active'); $('tabResult').classList.remove('active');
-    $('originalView').classList.add('active'); $('resultView').classList.remove('active');
-  });
+  return out;
+}
 
-  $('btnDownload').addEventListener('click', () => {
-    if (!currentBlob) return;
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(currentBlob);
-    a.download = currentFileName;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  });
+// === Compose final image ===
+function composeFinal(erodeRadius, blurRadius) {
+  if (!rawMaskCanvas || !originalImageCanvas) return null;
 
-  $('btnCopy').addEventListener('click', async () => {
-    if (!currentBlob) return;
-    try {
-      await navigator.clipboard.write([new ClipboardItem({'image/png': currentBlob})]);
-      showStatus('success', '📋 コピーしました');
-    } catch { showStatus('error', '❌ コピー失敗'); }
-  });
+  const w = originalImageCanvas.width, h = originalImageCanvas.height;
 
-  $('btnReset').addEventListener('click', () => {
-    results.classList.remove('active');
+  // Post-process mask
+  const processedMask = postProcessMask(rawMaskCanvas, erodeRadius, blurRadius);
+  const maskData = processedMask.getContext('2d').getImageData(0, 0, w, h).data;
+
+  // Get original pixels
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(originalImageCanvas, 0, 0);
+  const pixelData = ctx.getImageData(0, 0, w, h);
+
+  // Apply mask as alpha
+  for (let i = 0; i < w * h; i++) {
+    pixelData.data[i * 4 + 3] = maskData[i * 4]; // R channel of mask
+  }
+  ctx.putImageData(pixelData, 0, 0);
+
+  return canvas;
+}
+
+// === Process Image ===
+async function processImage(file) {
+  showStatus('', '');
+  results.classList.remove('active');
+  processing.classList.add('active');
+  inputSection.classList.add('hidden');
+
+  try {
+    await ensureModel();
+    await generateMask(file);
+    currentFileName = file.name.replace(/\.[^.]+$/, '') + '_transparent.png';
+
+    // Compose with current settings
+    await applyAndShow();
+
+    processing.classList.remove('active');
+    results.classList.add('active');
+    showStatus('success', '✅ 背景透過が完了しました');
+  } catch(err) {
     processing.classList.remove('active');
     inputSection.classList.remove('hidden');
-    statusEl.classList.remove('active');
-    currentBlob = null;
-  });
-
-  function showStatus(type, msg) {
-    if (!msg) { statusEl.classList.remove('active'); return; }
-    statusEl.className = 'status active ' + type;
-    statusEl.textContent = msg;
-    if (type === 'success') setTimeout(() => statusEl.classList.remove('active'), 5000);
+    showStatus('error', '❌ ' + err.message);
+    console.error(err);
   }
+}
+
+async function applyAndShow() {
+  const erode = parseInt(erodeSlider.value);
+  const blur = parseFloat(blurSlider.value);
+  const canvas = composeFinal(erode, blur);
+  if (!canvas) return;
+
+  const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+  currentBlob = blob;
+  $('resultImg').src = URL.createObjectURL(blob);
+}
+
+// === Events ===
+$('fileInput').addEventListener('change', function() {
+  const files = Array.from(this.files).filter(f => f.type.startsWith('image/'));
+  if (files.length > 0) processImage(files[0]);
+  this.value = '';
+});
+
+$('dropZone').addEventListener('dragover', e => { e.preventDefault(); $('dropZone').classList.add('drag-over'); });
+$('dropZone').addEventListener('dragleave', () => $('dropZone').classList.remove('drag-over'));
+$('dropZone').addEventListener('drop', e => {
+  e.preventDefault(); $('dropZone').classList.remove('drag-over');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  if (files.length > 0) processImage(files[0]);
+});
+
+// Tabs
+['tabResult','tabOriginal','tabMask'].forEach(id => {
+  $(id).addEventListener('click', () => {
+    ['tabResult','tabOriginal','tabMask'].forEach(t => $(t).classList.remove('active'));
+    ['resultView','originalView','maskView'].forEach(v => $(v).classList.remove('active'));
+    $(id).classList.add('active');
+    const viewMap = { tabResult:'resultView', tabOriginal:'originalView', tabMask:'maskView' };
+    $(viewMap[id]).classList.add('active');
+  });
+});
+
+$('btnDownload').addEventListener('click', () => {
+  if (!currentBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(currentBlob);
+  a.download = currentFileName;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+});
+
+$('btnReprocess').addEventListener('click', async () => {
+  showStatus('', '');
+  await applyAndShow();
+  showStatus('success', '✅ 再処理完了');
+});
+
+$('btnReset').addEventListener('click', () => {
+  results.classList.remove('active');
+  processing.classList.remove('active');
+  inputSection.classList.remove('hidden');
+  statusEl.classList.remove('active');
+  currentBlob = null;
+  rawMaskCanvas = null;
+  originalImageCanvas = null;
+});
+
+function showStatus(type, msg) {
+  if (!msg) { statusEl.classList.remove('active'); return; }
+  statusEl.className = 'status active ' + type;
+  statusEl.textContent = msg;
+  if (type === 'success') setTimeout(() => statusEl.classList.remove('active'), 5000);
+}
 </script>
 </body>
 </html>
