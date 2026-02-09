@@ -310,15 +310,48 @@
       progressText.textContent = 'マスクを適用中...';
 
       // Post-process: get mask from output tensor
-      // output shape is [1, 1, H, W] - squeeze to [H, W]
+      // output shape: [batch, channels, H, W] e.g. [1, 1, 1024, 1024]
       const maskTensor = output[0];
-      // Clamp to 0-1, multiply by 255
-      const maskRaw = maskTensor.squeeze().clamp(0, 1).mul(255).to('uint8');
+      // Clamp 0-1, scale to 255
+      const maskClamped = maskTensor.clamp(0, 1).mul(255).to('uint8');
 
-      // Convert to RawImage and resize to original dimensions
-      const maskImage = RawImage.fromTensor(maskRaw);
-      const resizedMask = await maskImage.resize(img.width, img.height);
-      const maskData = resizedMask.data;
+      // Get raw data and dims
+      const maskDims = maskClamped.dims; // e.g. [1, 1024, 1024] or [1, 1, 1024, 1024]
+      const maskH = maskDims[maskDims.length - 2];
+      const maskW = maskDims[maskDims.length - 1];
+      const maskFlat = maskClamped.data; // flat Uint8Array
+
+      // Resize mask to original image size using a temp canvas
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = maskW;
+      maskCanvas.height = maskH;
+      const maskCtx = maskCanvas.getContext('2d');
+      const maskImgData = maskCtx.createImageData(maskW, maskH);
+      const totalMaskPx = maskW * maskH;
+      // maskFlat may have more elements if multi-dim; just use last WxH
+      const offset = maskFlat.length - totalMaskPx;
+      for (let i = 0; i < totalMaskPx; i++) {
+        const v = maskFlat[offset + i];
+        maskImgData.data[i * 4]     = v;
+        maskImgData.data[i * 4 + 1] = v;
+        maskImgData.data[i * 4 + 2] = v;
+        maskImgData.data[i * 4 + 3] = 255;
+      }
+      maskCtx.putImageData(maskImgData, 0, 0);
+
+      // Resize to original dimensions
+      const resizeCanvas = document.createElement('canvas');
+      resizeCanvas.width = img.width;
+      resizeCanvas.height = img.height;
+      const resizeCtx = resizeCanvas.getContext('2d');
+      resizeCtx.drawImage(maskCanvas, 0, 0, img.width, img.height);
+      const resizedData = resizeCtx.getImageData(0, 0, img.width, img.height).data;
+
+      // Extract just the R channel as alpha values
+      const maskData = new Uint8Array(img.width * img.height);
+      for (let i = 0; i < maskData.length; i++) {
+        maskData[i] = resizedData[i * 4]; // R channel = mask value
+      }
 
       // Create output canvas
       const canvas = document.createElement('canvas');
