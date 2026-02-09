@@ -66,6 +66,15 @@
     background: rgba(254,202,87,0.08); border: 1px solid rgba(254,202,87,0.2);
     color: var(--warning); font-size: 0.72rem; line-height: 1.5;
   }
+  .settings {
+    margin-top: 10px; padding: 14px;
+    background: var(--bg-secondary); border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .settings-title {
+    font-size: 0.7rem; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+  }
 
   .processing { display:none; margin-top:24px; text-align:center; }
   .processing.active { display:block; }
@@ -179,6 +188,19 @@
     <div class="notice">
       ⚡ 初回はAIモデル(約45MB)のダウンロードが必要です。2回目以降はキャッシュ済みで高速。
     </div>
+    <div class="settings">
+      <div class="settings-title">⚙ 設定</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="font-size:0.85rem;color:var(--text-secondary);">マスク閾値</label>
+        <span id="threshLabel" style="font-size:0.8rem;color:var(--accent-bright);">128</span>
+      </div>
+      <input type="range" id="threshSlider" min="0" max="255" value="128"
+        style="width:100%;accent-color:var(--accent);">
+      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);margin-top:2px;">
+        <span>柔らかい (0)</span>
+        <span>くっきり (255)</span>
+      </div>
+    </div>
   </div>
 
   <div class="processing" id="processing">
@@ -243,6 +265,13 @@
   let processor = null;
   let currentBlob = null;
   let currentFileName = 'output.png';
+
+  // Threshold slider
+  const threshSlider = $('threshSlider');
+  const threshLabel = $('threshLabel');
+  threshSlider.addEventListener('input', () => {
+    threshLabel.textContent = threshSlider.value;
+  });
 
   // === Load model ===
   async function ensureModel() {
@@ -347,10 +376,27 @@
       resizeCtx.drawImage(maskCanvas, 0, 0, img.width, img.height);
       const resizedData = resizeCtx.getImageData(0, 0, img.width, img.height).data;
 
-      // Extract just the R channel as alpha values
+      // Extract R channel as mask, apply threshold
+      const threshold = parseInt(threshSlider.value);
       const maskData = new Uint8Array(img.width * img.height);
       for (let i = 0; i < maskData.length; i++) {
-        maskData[i] = resizedData[i * 4]; // R channel = mask value
+        const v = resizedData[i * 4]; // R channel = mask value
+        if (threshold === 0) {
+          // No threshold: use raw mask as-is (soft edges)
+          maskData[i] = v;
+        } else {
+          // Apply threshold: values above threshold become proportionally opaque
+          // Smooth threshold using a sigmoid-like curve for natural edges
+          const t = threshold;
+          if (v >= t) {
+            maskData[i] = 255;
+          } else if (v >= t * 0.5) {
+            // Smooth falloff zone
+            maskData[i] = Math.round(255 * (v - t * 0.5) / (t * 0.5));
+          } else {
+            maskData[i] = 0;
+          }
+        }
       }
 
       // Create output canvas
