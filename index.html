@@ -309,10 +309,16 @@
       progressBar.style.width = '85%';
       progressText.textContent = 'マスクを適用中...';
 
-      // Post-process: resize mask to original size
-      const maskData = (
-        await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(img.width, img.height)
-      ).data;
+      // Post-process: get mask from output tensor
+      // output shape is [1, 1, H, W] - squeeze to [H, W]
+      const maskTensor = output[0];
+      // Clamp to 0-1, multiply by 255
+      const maskRaw = maskTensor.squeeze().clamp(0, 1).mul(255).to('uint8');
+
+      // Convert to RawImage and resize to original dimensions
+      const maskImage = RawImage.fromTensor(maskRaw);
+      const resizedMask = await maskImage.resize(img.width, img.height);
+      const maskData = resizedMask.data;
 
       // Create output canvas
       const canvas = document.createElement('canvas');
@@ -320,15 +326,18 @@
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
 
-      // Draw original image
+      // Compose: original RGB + mask as alpha
       const imgData = ctx.createImageData(img.width, img.height);
-      // img.data is RGBA
-      for (let i = 0; i < img.data.length; i += 4) {
-        const px = i / 4;
-        imgData.data[i] = img.data[i];       // R
-        imgData.data[i+1] = img.data[i+1];   // G
-        imgData.data[i+2] = img.data[i+2];   // B
-        imgData.data[i+3] = maskData[px];     // A from mask
+      const srcChannels = img.channels; // typically 3 (RGB) or 4 (RGBA)
+      const totalPixels = img.width * img.height;
+
+      for (let i = 0; i < totalPixels; i++) {
+        const srcIdx = i * srcChannels;
+        const dstIdx = i * 4;
+        imgData.data[dstIdx]     = img.data[srcIdx];     // R
+        imgData.data[dstIdx + 1] = img.data[srcIdx + 1]; // G
+        imgData.data[dstIdx + 2] = img.data[srcIdx + 2]; // B
+        imgData.data[dstIdx + 3] = maskData[i];           // A from mask
       }
       ctx.putImageData(imgData, 0, 0);
 
