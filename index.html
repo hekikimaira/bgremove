@@ -14,12 +14,12 @@
     --border:#2a2a40; --radius:12px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100dvh}
-  .app{max-width:640px;margin:0 auto;padding:16px;padding-bottom:100px}
-  .header{text-align:center;padding:24px 0 20px}
-  .header h1{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--accent-bright),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .header p{font-size:.75rem;color:var(--text-dim);margin-top:4px}
-  .file-label{display:block;padding:20px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--radius);font-size:1rem;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .2s}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100dvh;-webkit-tap-highlight-color:transparent}
+  .app{max-width:640px;margin:0 auto;padding:16px;padding-bottom:120px}
+  .header{text-align:center;padding:24px 0 16px}
+  .header h1{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--accent-bright),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .header p{font-size:.72rem;color:var(--text-dim);margin-top:4px}
+  .file-label{display:block;padding:20px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--radius);font-size:1rem;font-weight:500;cursor:pointer;transition:all .2s}
   .file-label:active{background:var(--accent-bright);transform:scale(.98)}
   .file-label input[type="file"]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
   .drop-zone{margin-top:12px;border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;background:var(--bg-secondary);color:var(--text-dim);font-size:.8rem}
@@ -27,11 +27,11 @@
   .notice{margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(254,202,87,.08);border:1px solid rgba(254,202,87,.2);color:var(--warning);font-size:.72rem;line-height:1.5}
   .settings{margin-top:10px;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius)}
   .settings-title{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
-  .setting-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-  .setting-row label{font-size:.82rem;color:var(--text-secondary)}
-  .setting-row span{font-size:.8rem;color:var(--accent-bright);min-width:30px;text-align:right}
-  .setting-row input[type="range"]{flex:1;margin:0 10px;accent-color:var(--accent)}
-  .range-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-dim);margin-top:2px}
+  .setting-row{display:flex;align-items:center;margin-bottom:6px}
+  .setting-row label{font-size:.82rem;color:var(--text-secondary);min-width:80px}
+  .setting-row span{font-size:.78rem;color:var(--accent-bright);min-width:35px;text-align:right}
+  .setting-row input[type="range"]{flex:1;margin:0 8px;accent-color:var(--accent)}
+  .range-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-dim);margin-top:1px;margin-bottom:8px}
   .processing{display:none;margin-top:24px;text-align:center}
   .processing.active{display:block}
   .progress-box{background:var(--bg-secondary);border-radius:var(--radius);padding:32px 24px;border:1px solid var(--border)}
@@ -45,14 +45,14 @@
   .results.active{display:block}
   .compare-box{background:var(--bg-secondary);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
   .tabs{display:flex;border-bottom:1px solid var(--border)}
-  .tab{flex:1;padding:12px;text-align:center;font-size:.8rem;cursor:pointer;color:var(--text-secondary);background:transparent;border:none;font-family:'Noto Sans JP',sans-serif;-webkit-tap-highlight-color:transparent}
+  .tab{flex:1;padding:10px 4px;text-align:center;font-size:.75rem;cursor:pointer;color:var(--text-secondary);background:transparent;border:none;font-family:'Noto Sans JP',sans-serif}
   .tab.active{color:var(--accent-bright);background:var(--bg-card);box-shadow:inset 0 -2px 0 var(--accent)}
-  .img-view{display:none;width:100%}
-  .img-view.active{display:block}
-  .img-view img{display:block;width:100%;height:auto}
+  .view-panel{display:none;width:100%}
+  .view-panel.active{display:block}
+  .view-panel img{display:block;width:100%;height:auto}
   .checker-bg{background-image:linear-gradient(45deg,#1a1a28 25%,transparent 25%),linear-gradient(-45deg,#1a1a28 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#1a1a28 75%),linear-gradient(-45deg,transparent 75%,#1a1a28 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;background-color:#0f0f1a}
   .actions{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
-  .btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent}
+  .btn{flex:1;padding:10px 8px;border:none;border-radius:8px;font-size:.82rem;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;min-width:0}
   .btn-primary{background:var(--accent);color:#fff}
   .btn-primary:active{background:var(--accent-bright)}
   .btn-secondary{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border)}
@@ -64,7 +64,13 @@
   .hidden{display:none !important}
   .footer{text-align:center;margin-top:32px;font-size:.65rem;color:var(--text-dim)}
   .footer a{color:var(--accent-bright);text-decoration:none}
-  .reprocess-note{font-size:.7rem;color:var(--text-dim);text-align:center;margin-top:6px}
+  #editorCanvas{display:block;width:100%;height:auto;touch-action:none}
+  .editor-hint{font-size:.7rem;color:var(--text-dim);text-align:center;padding:6px;background:var(--bg-card);border-top:1px solid var(--border)}
+  .toolbar{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap}
+  .tool-btn{padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-secondary);font-size:.72rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap}
+  .tool-btn.active{border-color:var(--accent);color:var(--accent-bright);background:rgba(108,92,231,.15)}
+  .tool-btn:active{transform:scale(.95)}
+  .tool-sep{width:1px;height:24px;background:var(--border);margin:0 2px}
 </style>
 </head>
 <body>
@@ -75,16 +81,11 @@
   </div>
 
   <div id="inputSection">
-    <label class="file-label">
-      📁 画像を選択
+    <label class="file-label">📁 画像を選択
       <input type="file" id="fileInput" accept="image/*" multiple>
     </label>
-    <div class="drop-zone" id="dropZone">
-      ドラッグ＆ドロップでもOK · PNG/JPG/WebP
-    </div>
-    <div class="notice">
-      ⚡ 初回はAIモデル(約45MB)のダウンロードが必要です。2回目以降はキャッシュ済みで高速。
-    </div>
+    <div class="drop-zone" id="dropZone">ドラッグ＆ドロップでもOK</div>
+    <div class="notice">⚡ 初回はAIモデル(約45MB)のダウンロードが必要。2回目以降はキャッシュ済み。</div>
   </div>
 
   <div class="processing" id="processing">
@@ -95,394 +96,446 @@
       <div class="progress-detail" id="progressDetail"></div>
     </div>
   </div>
-
   <div class="status" id="status"></div>
 
   <div class="results" id="results">
     <div class="compare-box">
       <div class="tabs">
-        <button class="tab active" id="tabResult">透過結果</button>
+        <button class="tab active" id="tabEditor">✏️ 編集</button>
         <button class="tab" id="tabOriginal">元画像</button>
         <button class="tab" id="tabMask">マスク</button>
       </div>
-      <div class="img-view checker-bg active" id="resultView"><img id="resultImg"></div>
-      <div class="img-view" id="originalView"><img id="originalImg"></div>
-      <div class="img-view" id="maskView"><img id="maskImg"></div>
+
+      <div class="view-panel active" id="editorPanel">
+        <div class="toolbar">
+          <button class="tool-btn active" id="toolMagic">🪄 マジック</button>
+          <button class="tool-btn" id="toolBrush">🖌 消しゴム</button>
+          <button class="tool-btn" id="toolRestore">✨ 復元</button>
+          <div class="tool-sep"></div>
+          <button class="tool-btn" id="toolUndo">↩ 戻す</button>
+        </div>
+        <div class="checker-bg">
+          <canvas id="editorCanvas"></canvas>
+        </div>
+        <div class="editor-hint" id="editorHint">🪄 タップした場所の色に近い範囲を自動で透過</div>
+      </div>
+      <div class="view-panel" id="originalPanel"><img id="originalImg"></div>
+      <div class="view-panel" id="maskPanel"><img id="maskImg"></div>
+
+      <div id="editorSettings" class="settings" style="margin:0;border:none;border-top:1px solid var(--border);border-radius:0">
+        <div class="settings-title">🎛 ツール設定</div>
+        <div id="magicSettings">
+          <div class="setting-row">
+            <label>許容値</label>
+            <input type="range" id="toleranceSlider" min="5" max="100" value="32">
+            <span id="toleranceLabel">32</span>
+          </div>
+          <div class="range-labels"><span>厳密（色が近いもののみ）</span><span>広範囲</span></div>
+        </div>
+        <div id="brushSettings" style="display:none">
+          <div class="setting-row">
+            <label>サイズ</label>
+            <input type="range" id="brushSizeSlider" min="5" max="80" value="25">
+            <span id="brushSizeLabel">25</span>
+          </div>
+          <div class="range-labels"><span>小</span><span>大</span></div>
+        </div>
+      </div>
+
       <div class="actions">
         <button class="btn btn-primary" id="btnDownload">💾 保存</button>
-        <button class="btn btn-secondary" id="btnReprocess">🔄 再処理</button>
+        <button class="btn btn-secondary" id="btnReprocess">🔄 AI再実行</button>
       </div>
     </div>
 
-    <!-- Post-processing controls -->
-    <div class="settings" style="margin-top:12px;">
-      <div class="settings-title">🎛 後処理（保存前に調整）</div>
+    <div class="settings" style="margin-top:12px">
+      <div class="settings-title">⚙ AI後処理（AI再実行時に反映）</div>
       <div class="setting-row">
         <label>エッジ収縮</label>
         <input type="range" id="erodeSlider" min="0" max="5" value="1">
         <span id="erodeLabel">1</span>
       </div>
       <div class="range-labels"><span>なし</span><span>強め</span></div>
-      <div class="setting-row" style="margin-top:8px">
+      <div class="setting-row">
         <label>ぼかし</label>
         <input type="range" id="blurSlider" min="0" max="3" value="0.5" step="0.5">
         <span id="blurLabel">0.5</span>
       </div>
       <div class="range-labels"><span>シャープ</span><span>なめらか</span></div>
-      <div class="setting-row" style="margin-top:8px">
+      <div class="setting-row">
         <label>パディング</label>
         <input type="range" id="padSlider" min="0" max="15" value="5" step="1">
         <span id="padLabel">5%</span>
       </div>
-      <div class="range-labels"><span>なし</span><span>広め（端の切れ防止）</span></div>
+      <div class="range-labels"><span>なし</span><span>広め</span></div>
     </div>
-    <div class="reprocess-note">エッジ収縮・ぼかし→「再処理」で即反映 ／ パディング変更→新しい画像で反映</div>
-
     <button class="btn-reset" id="btnReset">📁 新しい画像を処理</button>
   </div>
-
-  <div class="footer">
-    powered by <a href="https://huggingface.co/docs/transformers.js" target="_blank">Transformers.js</a> + <a href="https://huggingface.co/briaai/RMBG-1.4" target="_blank">RMBG-1.4</a>
-  </div>
+  <div class="footer">powered by <a href="https://huggingface.co/docs/transformers.js">Transformers.js</a> + <a href="https://huggingface.co/briaai/RMBG-1.4">RMBG-1.4</a></div>
 </div>
 
 <script type="module">
 import { AutoModel, AutoProcessor, RawImage, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.1';
-
 env.allowLocalModels = false;
-
 const $ = id => document.getElementById(id);
-const inputSection = $('inputSection');
-const processing = $('processing');
-const progressText = $('progressText');
-const progressBar = $('progressBar');
-const progressDetail = $('progressDetail');
-const results = $('results');
-const statusEl = $('status');
 
+// ─── State ───
 let aiModel = null, aiProcessor = null;
 let currentBlob = null, currentFileName = 'output.png';
-// Store raw mask and original image for reprocessing
-let rawMaskCanvas = null;
-let originalImageCanvas = null;
+let rawMaskCanvas = null, originalImageCanvas = null;
 
-const erodeSlider = $('erodeSlider');
-const erodeLabel = $('erodeLabel');
-const blurSlider = $('blurSlider');
-const blurLabel = $('blurLabel');
+const EC = $('editorCanvas');
+const ectx = EC.getContext('2d', { willReadFrequently: true });
+let editData = null;
+let undoStack = [];
+let originalPixels = null;
+let currentTool = 'magic';
+let isDrawing = false;
 
-erodeSlider.addEventListener('input', () => erodeLabel.textContent = erodeSlider.value);
-blurSlider.addEventListener('input', () => blurLabel.textContent = blurSlider.value);
+// ─── Sliders ───
+const wire = (s, l, suf='') => { $(s).addEventListener('input', () => $(l).textContent = $(s).value + suf); };
+wire('toleranceSlider','toleranceLabel');
+wire('brushSizeSlider','brushSizeLabel');
+wire('erodeSlider','erodeLabel');
+wire('blurSlider','blurLabel');
+wire('padSlider','padLabel','%');
 
-const padSlider = $('padSlider');
-const padLabel = $('padLabel');
-padSlider.addEventListener('input', () => padLabel.textContent = padSlider.value + '%');
-
-// === Model Loading ===
-async function ensureModel() {
-  if (aiModel && aiProcessor) return;
-  progressText.textContent = 'AIモデルを読み込み中...';
-  progressBar.style.width = '15%';
-  progressDetail.textContent = 'briaai/RMBG-1.4';
-
-  aiModel = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
-    config: { model_type: 'custom' },
+// ─── Tool switching ───
+const toolBtns = { toolMagic:'magic', toolBrush:'brush', toolRestore:'restore' };
+const toolHints = {
+  magic: '🪄 タップした場所の色に近い範囲を自動で透過',
+  brush: '🖌 なぞった部分を直接消去',
+  restore: '✨ なぞった部分を元画像から復元'
+};
+Object.entries(toolBtns).forEach(([id, t]) => {
+  $(id).addEventListener('click', () => {
+    currentTool = t;
+    Object.keys(toolBtns).forEach(b => $(b).classList.remove('active'));
+    $(id).classList.add('active');
+    $('editorHint').textContent = toolHints[t];
+    $('magicSettings').style.display = t === 'magic' ? '' : 'none';
+    $('brushSettings').style.display = t !== 'magic' ? '' : 'none';
   });
-  progressBar.style.width = '35%';
+});
 
-  aiProcessor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
-    config: {
-      do_normalize: true,
-      do_pad: false,
-      do_rescale: true,
-      do_resize: true,
-      image_mean: [0.5, 0.5, 0.5],
-      image_std: [1, 1, 1],
-      feature_extractor_type: 'ImageFeatureExtractor',
-      resample: 2,
-      rescale_factor: 0.00392156862745098,
-      size: { width: 1024, height: 1024 },
-    }
-  });
-  progressBar.style.width = '50%';
+// ─── Undo ───
+function pushUndo() {
+  undoStack.push(new ImageData(new Uint8ClampedArray(editData.data), editData.width, editData.height));
+  if (undoStack.length > 20) undoStack.shift();
 }
+$('toolUndo').addEventListener('click', () => {
+  if (!undoStack.length) return;
+  editData = undoStack.pop();
+  ectx.putImageData(editData, 0, 0);
+  syncBlob();
+});
 
-// === Core: Generate raw mask with padding ===
-async function generateMask(file) {
-  const origURL = URL.createObjectURL(file);
-  $('originalImg').src = origURL;
+// ─── Magic Eraser (flood fill by color similarity) ───
+function magicErase(sx, sy) {
+  const w = EC.width, h = EC.height, d = editData.data;
+  const tol = parseInt($('toleranceSlider').value);
+  const i0 = (sy * w + sx) * 4;
+  if (d[i0+3] < 10) return; // already transparent
+  const sR = d[i0], sG = d[i0+1], sB = d[i0+2];
 
-  progressText.textContent = '画像を読み込み中...';
-  progressBar.style.width = '55%';
+  const visited = new Uint8Array(w * h);
+  const stack = [sx + sy * w];
+  visited[sx + sy * w] = 1;
+  const erased = [];
 
-  const img = await RawImage.fromURL(origURL);
-  const origW = img.width, origH = img.height;
+  while (stack.length) {
+    const pos = stack.pop();
+    const pi = pos * 4;
+    if (d[pi+3] < 10) continue; // skip transparent
 
-  // Add padding to help model detect objects at image edges
-  const padPct = parseInt(padSlider.value) / 100;
-  const padX = Math.round(origW * padPct);
-  const padY = Math.round(origH * padPct);
-  const padW = origW + padX * 2;
-  const padH = origH + padY * 2;
+    const dr = d[pi]-sR, dg = d[pi+1]-sG, db = d[pi+2]-sB;
+    if (Math.sqrt(dr*dr+dg*dg+db*db) > tol) continue;
 
-  // Create padded canvas with edge-extended background
-  const padCanvas = document.createElement('canvas');
-  padCanvas.width = padW; padCanvas.height = padH;
-  const padCtx = padCanvas.getContext('2d');
+    erased.push(pos);
+    const px = pos % w, py = (pos / w) | 0;
 
-  const origCanvas = img.toCanvas();
-
-  // Fill with edge colors by stretching edges (better than solid color)
-  // First fill the entire canvas with the image scaled to padded size
-  padCtx.drawImage(origCanvas, 0, 0, padW, padH);
-  // Apply a heavy blur to make it a soft background
-  const blurBg = document.createElement('canvas');
-  blurBg.width = padW; blurBg.height = padH;
-  const blurBgCtx = blurBg.getContext('2d');
-  blurBgCtx.filter = 'blur(30px)';
-  blurBgCtx.drawImage(padCanvas, 0, 0);
-  padCtx.drawImage(blurBg, 0, 0);
-  // Draw the original image centered on top
-  padCtx.drawImage(origCanvas, padX, padY);
-
-  progressText.textContent = '前処理中...';
-  progressBar.style.width = '60%';
-
-  // Convert padded canvas to RawImage for model
-  const padImgURL = padCanvas.toDataURL('image/png');
-  const paddedImg = await RawImage.fromURL(padImgURL);
-
-  const { pixel_values } = await aiProcessor(paddedImg);
-
-  progressText.textContent = 'AI推論中...';
-  progressBar.style.width = '70%';
-
-  const { output } = await aiModel({ input: pixel_values });
-
-  progressText.textContent = 'マスク生成中...';
-  progressBar.style.width = '85%';
-
-  // Extract mask data from tensor
-  const maskTensor = output[0].mul(255).to('uint8');
-  const dims = maskTensor.dims;
-  const mH = dims[dims.length - 2];
-  const mW = dims[dims.length - 1];
-  const flat = maskTensor.data;
-  const px = mH * mW;
-  const off = flat.length - px;
-
-  // Create mask canvas at model resolution
-  const mc = document.createElement('canvas');
-  mc.width = mW; mc.height = mH;
-  const mctx = mc.getContext('2d');
-  const mid = mctx.createImageData(mW, mH);
-  for (let i = 0; i < px; i++) {
-    const v = flat[off + i];
-    mid.data[i*4] = v; mid.data[i*4+1] = v; mid.data[i*4+2] = v; mid.data[i*4+3] = 255;
-  }
-  mctx.putImageData(mid, 0, 0);
-
-  // Resize mask to PADDED image dimensions
-  const fullMaskCanvas = document.createElement('canvas');
-  fullMaskCanvas.width = padW; fullMaskCanvas.height = padH;
-  const fmctx = fullMaskCanvas.getContext('2d');
-  fmctx.imageSmoothingEnabled = true;
-  fmctx.imageSmoothingQuality = 'high';
-  fmctx.drawImage(mc, 0, 0, padW, padH);
-
-  // Crop mask back to original dimensions (remove padding)
-  const rc = document.createElement('canvas');
-  rc.width = origW; rc.height = origH;
-  const rctx = rc.getContext('2d');
-  rctx.drawImage(fullMaskCanvas, padX, padY, origW, origH, 0, 0, origW, origH);
-
-  // Store raw mask canvas (original size, no padding)
-  rawMaskCanvas = rc;
-
-  // Store original image canvas
-  const oc = document.createElement('canvas');
-  oc.width = origW; oc.height = origH;
-  const octx = oc.getContext('2d');
-  octx.drawImage(origCanvas, 0, 0);
-  originalImageCanvas = oc;
-
-  // Show raw mask
-  $('maskImg').src = rc.toDataURL();
-
-  return { width: origW, height: origH };
-}
-
-// === Post-processing: erode mask edges & blur ===
-function postProcessMask(srcCanvas, erodeRadius, blurRadius) {
-  const w = srcCanvas.width, h = srcCanvas.height;
-  const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h);
-
-  // Extract single-channel mask
-  const mask = new Uint8Array(w * h);
-  for (let i = 0; i < mask.length; i++) mask[i] = src.data[i * 4];
-
-  // Erode: shrink foreground by erodeRadius pixels
-  let current = mask;
-  for (let pass = 0; pass < erodeRadius; pass++) {
-    const next = new Uint8Array(w * h);
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        const idx = y * w + x;
-        let minVal = current[idx];
-        // Check 4-connected neighbors
-        if (x > 0) minVal = Math.min(minVal, current[idx - 1]);
-        if (x < w-1) minVal = Math.min(minVal, current[idx + 1]);
-        if (y > 0) minVal = Math.min(minVal, current[idx - w]);
-        if (y < h-1) minVal = Math.min(minVal, current[idx + w]);
-        next[idx] = minVal;
+    // 8-connected
+    for (const [nx,ny] of [[px-1,py],[px+1,py],[px,py-1],[px,py+1],[px-1,py-1],[px+1,py-1],[px-1,py+1],[px+1,py+1]]) {
+      if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+        const ni = ny * w + nx;
+        if (!visited[ni]) { visited[ni] = 1; stack.push(ni); }
       }
     }
-    current = next;
   }
 
-  // Apply Gaussian-like blur via canvas for edge smoothing
-  const out = document.createElement('canvas');
-  out.width = w; out.height = h;
-  const octx = out.getContext('2d');
-  const oid = octx.createImageData(w, h);
-  for (let i = 0; i < current.length; i++) {
-    oid.data[i*4] = current[i];
-    oid.data[i*4+1] = current[i];
-    oid.data[i*4+2] = current[i];
-    oid.data[i*4+3] = 255;
-  }
-  octx.putImageData(oid, 0, 0);
+  // Erase
+  for (const p of erased) d[p*4+3] = 0;
 
-  if (blurRadius > 0) {
-    const blurred = document.createElement('canvas');
-    blurred.width = w; blurred.height = h;
-    const bctx = blurred.getContext('2d');
-    bctx.filter = `blur(${blurRadius}px)`;
-    bctx.drawImage(out, 0, 0);
-    return blurred;
+  // Soft edge: reduce alpha of border pixels
+  for (const p of erased) {
+    const px = p % w, py = (p / w) | 0;
+    for (const [nx,ny] of [[px-1,py],[px+1,py],[px,py-1],[px,py+1]]) {
+      if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+        const ni = ny * w + nx;
+        if (!visited[ni] && d[ni*4+3] > 0) {
+          d[ni*4+3] = Math.max(0, d[ni*4+3] - 120);
+        }
+      }
+    }
   }
 
-  return out;
+  ectx.putImageData(editData, 0, 0);
 }
 
-// === Compose final image ===
-function composeFinal(erodeRadius, blurRadius) {
-  if (!rawMaskCanvas || !originalImageCanvas) return null;
+// ─── Brush eraser / restore ───
+function brushStroke(cx, cy) {
+  const w = EC.width, h = EC.height, d = editData.data;
+  const rect = EC.getBoundingClientRect();
+  const scale = w / rect.width;
+  const r = (parseInt($('brushSizeSlider').value) / 2) * scale;
+  const erase = currentTool === 'brush';
 
-  const w = originalImageCanvas.width, h = originalImageCanvas.height;
+  const x0 = Math.max(0, Math.floor(cx-r));
+  const y0 = Math.max(0, Math.floor(cy-r));
+  const x1 = Math.min(w-1, Math.ceil(cx+r));
+  const y1 = Math.min(h-1, Math.ceil(cy+r));
 
-  // Post-process mask
-  const processedMask = postProcessMask(rawMaskCanvas, erodeRadius, blurRadius);
-  const maskData = processedMask.getContext('2d').getImageData(0, 0, w, h).data;
-
-  // Get original pixels
-  const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(originalImageCanvas, 0, 0);
-  const pixelData = ctx.getImageData(0, 0, w, h);
-
-  // Apply mask as alpha
-  for (let i = 0; i < w * h; i++) {
-    pixelData.data[i * 4 + 3] = maskData[i * 4]; // R channel of mask
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      const dist = Math.sqrt((x-cx)**2 + (y-cy)**2);
+      if (dist > r) continue;
+      const strength = dist < r * 0.6 ? 1 : 1 - (dist - r*0.6) / (r*0.4);
+      const i = (y * w + x) * 4;
+      if (erase) {
+        d[i+3] = Math.max(0, d[i+3] - strength * 200);
+      } else if (originalPixels) {
+        d[i] = originalPixels[i]; d[i+1] = originalPixels[i+1]; d[i+2] = originalPixels[i+2];
+        d[i+3] = Math.min(255, d[i+3] + strength * 200);
+      }
+    }
   }
-  ctx.putImageData(pixelData, 0, 0);
-
-  return canvas;
+  ectx.putImageData(editData, 0, 0);
 }
 
-// === Process Image ===
+// ─── Canvas events ───
+function pos(e) {
+  const r = EC.getBoundingClientRect();
+  const s = EC.width / r.width;
+  const t = e.touches ? e.touches[0] : e;
+  return { x: Math.round((t.clientX - r.left) * s), y: Math.round((t.clientY - r.top) * s) };
+}
+
+function down(e) {
+  e.preventDefault();
+  const p = pos(e);
+  if (p.x < 0 || p.y < 0 || p.x >= EC.width || p.y >= EC.height) return;
+  pushUndo();
+  if (currentTool === 'magic') {
+    magicErase(p.x, p.y);
+    syncBlob();
+  } else {
+    isDrawing = true;
+    brushStroke(p.x, p.y);
+  }
+}
+function move(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
+  const p = pos(e);
+  brushStroke(p.x, p.y);
+}
+function up() { if (isDrawing) { isDrawing = false; syncBlob(); } }
+
+EC.addEventListener('mousedown', down);
+EC.addEventListener('mousemove', move);
+EC.addEventListener('mouseup', up);
+EC.addEventListener('mouseleave', up);
+EC.addEventListener('touchstart', down, { passive: false });
+EC.addEventListener('touchmove', move, { passive: false });
+EC.addEventListener('touchend', up);
+
+async function syncBlob() {
+  currentBlob = await new Promise(r => EC.toBlob(r, 'image/png'));
+}
+
+// ─── Tab switching ───
+const tabs = { tabEditor:'editorPanel', tabOriginal:'originalPanel', tabMask:'maskPanel' };
+Object.entries(tabs).forEach(([tid, pid]) => {
+  $(tid).addEventListener('click', () => {
+    Object.keys(tabs).forEach(t => $(t).classList.remove('active'));
+    Object.values(tabs).forEach(p => $(p).classList.remove('active'));
+    $(tid).classList.add('active'); $(pid).classList.add('active');
+    $('editorSettings').style.display = tid === 'tabEditor' ? '' : 'none';
+  });
+});
+
+// ─── AI model ───
+async function ensureModel() {
+  if (aiModel) return;
+  $('progressText').textContent = 'AIモデルを読み込み中...';
+  $('progressBar').style.width = '15%';
+  aiModel = await AutoModel.from_pretrained('briaai/RMBG-1.4', { config: { model_type: 'custom' } });
+  $('progressBar').style.width = '35%';
+  aiProcessor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
+    config: { do_normalize:true, do_pad:false, do_rescale:true, do_resize:true,
+      image_mean:[.5,.5,.5], image_std:[1,1,1], feature_extractor_type:'ImageFeatureExtractor',
+      resample:2, rescale_factor:0.00392156862745098, size:{width:1024,height:1024} }
+  });
+  $('progressBar').style.width = '50%';
+}
+
+// ─── Generate mask ───
+async function generateMask(file) {
+  const url = URL.createObjectURL(file);
+  $('originalImg').src = url;
+  $('progressText').textContent = '画像を読み込み中...';
+  $('progressBar').style.width = '55%';
+
+  const img = await RawImage.fromURL(url);
+  const oW = img.width, oH = img.height;
+  const pp = parseInt($('padSlider').value)/100;
+  const pX = Math.round(oW*pp), pY = Math.round(oH*pp);
+  const pW = oW+pX*2, pH = oH+pY*2;
+
+  const oc = img.toCanvas();
+  const pc = document.createElement('canvas'); pc.width=pW; pc.height=pH;
+  const pctx = pc.getContext('2d');
+  pctx.drawImage(oc,0,0,pW,pH);
+  const bc = document.createElement('canvas'); bc.width=pW; bc.height=pH;
+  const bctx = bc.getContext('2d'); bctx.filter='blur(30px)'; bctx.drawImage(pc,0,0);
+  pctx.drawImage(bc,0,0); pctx.drawImage(oc,pX,pY);
+
+  $('progressText').textContent = 'AI推論中...';
+  $('progressBar').style.width = '65%';
+  const pImg = await RawImage.fromURL(pc.toDataURL('image/png'));
+  const { pixel_values } = await aiProcessor(pImg);
+  $('progressBar').style.width = '75%';
+  const { output } = await aiModel({ input: pixel_values });
+  $('progressBar').style.width = '85%';
+
+  const mt = output[0].mul(255).to('uint8');
+  const dims = mt.dims, mH = dims[dims.length-2], mW = dims[dims.length-1];
+  const flat = mt.data, px = mH*mW, off = flat.length - px;
+
+  const mc = document.createElement('canvas'); mc.width=mW; mc.height=mH;
+  const mctx = mc.getContext('2d');
+  const mid = mctx.createImageData(mW,mH);
+  for (let i=0;i<px;i++) { const v=flat[off+i]; mid.data[i*4]=v; mid.data[i*4+1]=v; mid.data[i*4+2]=v; mid.data[i*4+3]=255; }
+  mctx.putImageData(mid,0,0);
+
+  const fc = document.createElement('canvas'); fc.width=pW; fc.height=pH;
+  const fctx = fc.getContext('2d'); fctx.imageSmoothingEnabled=true; fctx.imageSmoothingQuality='high';
+  fctx.drawImage(mc,0,0,pW,pH);
+
+  const rc = document.createElement('canvas'); rc.width=oW; rc.height=oH;
+  rc.getContext('2d').drawImage(fc,pX,pY,oW,oH,0,0,oW,oH);
+  rawMaskCanvas = rc;
+
+  const oc2 = document.createElement('canvas'); oc2.width=oW; oc2.height=oH;
+  oc2.getContext('2d').drawImage(oc,0,0);
+  originalImageCanvas = oc2;
+
+  $('maskImg').src = rc.toDataURL();
+}
+
+// ─── Post-process & compose ───
+function postProcess(src, erode, blur) {
+  const w=src.width, h=src.height;
+  const sd = src.getContext('2d').getImageData(0,0,w,h);
+  let m = new Uint8Array(w*h);
+  for (let i=0;i<m.length;i++) m[i]=sd.data[i*4];
+  for (let p=0;p<erode;p++) {
+    const n=new Uint8Array(w*h);
+    for (let y=0;y<h;y++) for (let x=0;x<w;x++) {
+      const i=y*w+x; let v=m[i];
+      if(x>0)v=Math.min(v,m[i-1]); if(x<w-1)v=Math.min(v,m[i+1]);
+      if(y>0)v=Math.min(v,m[i-w]); if(y<h-1)v=Math.min(v,m[i+w]);
+      n[i]=v;
+    }
+    m=n;
+  }
+  const oc=document.createElement('canvas'); oc.width=w; oc.height=h;
+  const octx=oc.getContext('2d'); const oid=octx.createImageData(w,h);
+  for(let i=0;i<m.length;i++){oid.data[i*4]=m[i];oid.data[i*4+1]=m[i];oid.data[i*4+2]=m[i];oid.data[i*4+3]=255;}
+  octx.putImageData(oid,0,0);
+  if(blur>0){const b=document.createElement('canvas');b.width=w;b.height=h;const bx=b.getContext('2d');bx.filter=`blur(${blur}px)`;bx.drawImage(oc,0,0);return b;}
+  return oc;
+}
+
+function compose(erode, blur) {
+  if(!rawMaskCanvas||!originalImageCanvas)return null;
+  const w=originalImageCanvas.width, h=originalImageCanvas.height;
+  const pm=postProcess(rawMaskCanvas,erode,blur);
+  const md=pm.getContext('2d').getImageData(0,0,w,h).data;
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const ctx=c.getContext('2d'); ctx.drawImage(originalImageCanvas,0,0);
+  const pd=ctx.getImageData(0,0,w,h);
+  for(let i=0;i<w*h;i++) pd.data[i*4+3]=md[i*4];
+  ctx.putImageData(pd,0,0);
+  return c;
+}
+
+function loadEditor(canvas) {
+  EC.width=canvas.width; EC.height=canvas.height;
+  ectx.drawImage(canvas,0,0);
+  editData=ectx.getImageData(0,0,canvas.width,canvas.height);
+  originalPixels=new Uint8ClampedArray(editData.data);
+  undoStack=[];
+}
+
+// ─── Main flow ───
 async function processImage(file) {
-  showStatus('', '');
-  results.classList.remove('active');
-  processing.classList.add('active');
-  inputSection.classList.add('hidden');
-
+  showStatus('','');
+  $('results').classList.remove('active');
+  $('processing').classList.add('active');
+  $('inputSection').classList.add('hidden');
   try {
     await ensureModel();
     await generateMask(file);
-    currentFileName = file.name.replace(/\.[^.]+$/, '') + '_transparent.png';
-
-    // Compose with current settings
-    await applyAndShow();
-
-    processing.classList.remove('active');
-    results.classList.add('active');
-    showStatus('success', '✅ 背景透過が完了しました');
-  } catch(err) {
-    processing.classList.remove('active');
-    inputSection.classList.remove('hidden');
-    showStatus('error', '❌ ' + err.message);
-    console.error(err);
+    currentFileName = file.name.replace(/\.[^.]+$/,'') + '_transparent.png';
+    const c = compose(parseInt($('erodeSlider').value), parseFloat($('blurSlider').value));
+    loadEditor(c);
+    await syncBlob();
+    $('processing').classList.remove('active');
+    $('results').classList.add('active');
+    showStatus('success','✅ 完了！編集タブでタップして残った背景を消せます');
+  } catch(e) {
+    $('processing').classList.remove('active');
+    $('inputSection').classList.remove('hidden');
+    showStatus('error','❌ '+e.message); console.error(e);
   }
 }
 
-async function applyAndShow() {
-  const erode = parseInt(erodeSlider.value);
-  const blur = parseFloat(blurSlider.value);
-  const canvas = composeFinal(erode, blur);
-  if (!canvas) return;
-
-  const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
-  currentBlob = blob;
-  $('resultImg').src = URL.createObjectURL(blob);
-}
-
-// === Events ===
-$('fileInput').addEventListener('change', function() {
-  const files = Array.from(this.files).filter(f => f.type.startsWith('image/'));
-  if (files.length > 0) processImage(files[0]);
-  this.value = '';
+// ─── UI Events ───
+$('fileInput').addEventListener('change', function(){
+  const f=Array.from(this.files).filter(f=>f.type.startsWith('image/'));
+  if(f.length)processImage(f[0]); this.value='';
+});
+$('dropZone').addEventListener('dragover',e=>{e.preventDefault();$('dropZone').classList.add('drag-over');});
+$('dropZone').addEventListener('dragleave',()=>$('dropZone').classList.remove('drag-over'));
+$('dropZone').addEventListener('drop',e=>{
+  e.preventDefault();$('dropZone').classList.remove('drag-over');
+  const f=Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  if(f.length)processImage(f[0]);
 });
 
-$('dropZone').addEventListener('dragover', e => { e.preventDefault(); $('dropZone').classList.add('drag-over'); });
-$('dropZone').addEventListener('dragleave', () => $('dropZone').classList.remove('drag-over'));
-$('dropZone').addEventListener('drop', e => {
-  e.preventDefault(); $('dropZone').classList.remove('drag-over');
-  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-  if (files.length > 0) processImage(files[0]);
+$('btnDownload').addEventListener('click',()=>{
+  if(!currentBlob)return;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(currentBlob);
+  a.download=currentFileName; document.body.appendChild(a); a.click(); document.body.removeChild(a);
 });
 
-// Tabs
-['tabResult','tabOriginal','tabMask'].forEach(id => {
-  $(id).addEventListener('click', () => {
-    ['tabResult','tabOriginal','tabMask'].forEach(t => $(t).classList.remove('active'));
-    ['resultView','originalView','maskView'].forEach(v => $(v).classList.remove('active'));
-    $(id).classList.add('active');
-    const viewMap = { tabResult:'resultView', tabOriginal:'originalView', tabMask:'maskView' };
-    $(viewMap[id]).classList.add('active');
-  });
+$('btnReprocess').addEventListener('click', async()=>{
+  const c=compose(parseInt($('erodeSlider').value),parseFloat($('blurSlider').value));
+  if(c){loadEditor(c);await syncBlob();showStatus('success','✅ AI再処理完了');}
 });
 
-$('btnDownload').addEventListener('click', () => {
-  if (!currentBlob) return;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(currentBlob);
-  a.download = currentFileName;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+$('btnReset').addEventListener('click',()=>{
+  $('results').classList.remove('active');$('processing').classList.remove('active');
+  $('inputSection').classList.remove('hidden');$('status').classList.remove('active');
+  currentBlob=null;rawMaskCanvas=null;originalImageCanvas=null;undoStack=[];editData=null;originalPixels=null;
 });
 
-$('btnReprocess').addEventListener('click', async () => {
-  showStatus('', '');
-  await applyAndShow();
-  showStatus('success', '✅ 再処理完了');
-});
-
-$('btnReset').addEventListener('click', () => {
-  results.classList.remove('active');
-  processing.classList.remove('active');
-  inputSection.classList.remove('hidden');
-  statusEl.classList.remove('active');
-  currentBlob = null;
-  rawMaskCanvas = null;
-  originalImageCanvas = null;
-});
-
-function showStatus(type, msg) {
-  if (!msg) { statusEl.classList.remove('active'); return; }
-  statusEl.className = 'status active ' + type;
-  statusEl.textContent = msg;
-  if (type === 'success') setTimeout(() => statusEl.classList.remove('active'), 5000);
+function showStatus(t,m){
+  const e=$('status');
+  if(!m){e.classList.remove('active');return;}
+  e.className='status active '+t; e.textContent=m;
+  if(t==='success')setTimeout(()=>e.classList.remove('active'),5000);
 }
 </script>
 </body>
